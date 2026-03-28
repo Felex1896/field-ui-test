@@ -231,14 +231,14 @@
     <!-- Suggest options editor -->
     <div class="control-group suggest-options-group">
       <label class="control-label">Suggest options</label>
-      <p class="control-hint">One option per line. Use <code>Label | value</code> to set a separate value, or just <code>Label</code> to use the label as the value. Max {{ 100 }} lines.</p>
+      <p class="control-hint">One option per line. Use <code>Label | value</code> to set a separate value, or just <code>Label</code> to use the label as the value. Max {{ maxSuggestLines }} lines.</p>
       <textarea
         class="suggest-options-textarea"
         rows="6"
         [(ngModel)]="suggestOptionsDraft"
         spellcheck="false"
         autocomplete="off"
-        placeholder="Item 1&#10;Item 2&#10;Display name | internal-id"
+        placeholder="Apple&#10;Bell pepper&#10;Display name | internal-id"
       ></textarea>
       @if (suggestOptionsError) {
         <p class="suggest-options-error">{{ suggestOptionsError }}</p>
