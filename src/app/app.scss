@@ -41,7 +41,9 @@
 }
 
 .preview-field {
-  width: 400px;
+  flex-shrink: 0;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .state-badge-row {
@@ -143,6 +145,105 @@
 
   .theme-light & {
     color: rgba(0, 0, 0, 0.7);
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.width-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.width-number-input {
+  flex: 1;
+  min-width: 0;
+  font-variant-numeric: tabular-nums;
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    appearance: none;
+    margin: 0;
+  }
+  appearance: textfield;
+}
+
+.width-input-unit {
+  flex-shrink: 0;
+  font-size: 13px;
+  font-family: var(--field-font-family);
+  color: rgba(253, 253, 253, 0.4);
+  transition: color 200ms ease;
+
+  .theme-light & {
+    color: rgba(0, 0, 0, 0.4);
+  }
+}
+
+.width-slider {
+  width: 100%;
+  height: 6px;
+  margin: 4px 0 0;
+  border-radius: 3px;
+  appearance: none;
+  cursor: pointer;
+  background: rgba(253, 253, 253, 0.12);
+  accent-color: #719bee;
+
+  &::-webkit-slider-thumb {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #719bee;
+    border: 2px solid rgba(253, 253, 253, 0.9);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  }
+
+  &::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #719bee;
+    border: 2px solid rgba(253, 253, 253, 0.9);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  }
+
+  &::-moz-range-track {
+    height: 6px;
+    border-radius: 3px;
+    background: rgba(253, 253, 253, 0.12);
+  }
+
+  .theme-light & {
+    background: rgba(0, 0, 0, 0.12);
+    accent-color: #1a6ed8;
+
+    &::-webkit-slider-thumb {
+      background: #1a6ed8;
+      border-color: #fff;
+    }
+
+    &::-moz-range-thumb {
+      background: #1a6ed8;
+      border-color: #fff;
+    }
+
+    &::-moz-range-track {
+      background: rgba(0, 0, 0, 0.12);
+    }
   }
 }
 

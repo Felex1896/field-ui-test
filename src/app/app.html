@@ -3,7 +3,8 @@
   <!-- ── Left: Field preview ─────────────────────────────────────────────── -->
   <div class="preview-panel">
     <p class="preview-label">Preview</p>
-    <div class="preview-field">
+
+    <div class="preview-field" [style.width.px]="fieldWidth">
       <app-field-standard
         [control]="fieldControl"
         [label]="labelText"
@@ -50,6 +51,38 @@
           <input type="checkbox" [ngModel]="theme === 'light'" (ngModelChange)="theme = $event ? 'light' : 'dark'; onThemeChange()" />
           <span class="toggle-track"></span>
         </label>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Field width -->
+    <div class="control-group">
+      <label class="control-label" for="field-width-range">Width</label>
+      <input
+        id="field-width-range"
+        class="width-slider"
+        type="range"
+        [min]="fieldMinWidth"
+        [max]="fieldMaxWidth"
+        step="1"
+        [ngModel]="fieldWidth"
+        (ngModelChange)="setFieldWidth($event)"
+      />
+      <div class="width-input-row">
+        <label class="sr-only" for="field-width-number">Width in pixels</label>
+        <input
+          id="field-width-number"
+          class="text-input width-number-input"
+          type="number"
+          [min]="fieldMinWidth"
+          [max]="fieldMaxWidth"
+          step="1"
+          [(ngModel)]="fieldWidthText"
+          (blur)="commitFieldWidthFromInput()"
+          (keydown.enter)="onWidthInputEnter($event)"
+        />
+        <span class="width-input-unit" aria-hidden="true">px</span>
       </div>
     </div>
 

@@ -16,6 +16,13 @@ type IconSlot = 'leading' | 'trailing';
 export class App implements OnInit {
   fieldControl = new FormControl('');
 
+  /** Preview field width (px), controlled from the playground panel. */
+  fieldWidth = 400;
+  /** Draft for the width input; committed on blur / Enter (avoids clamp-while-typing). */
+  fieldWidthText: string | number = '400';
+  readonly fieldMinWidth = 200;
+  readonly fieldMaxWidth = 960;
+
   // Theme
   theme: 'dark' | 'light' = 'dark';
 
@@ -50,6 +57,34 @@ export class App implements OnInit {
 
   ngOnInit(): void {
     this.applyTheme();
+  }
+
+  setFieldWidth(value: number | string): void {
+    const n = typeof value === 'string' ? parseFloat(value) : Number(value);
+    if (!Number.isFinite(n)) return;
+    this.fieldWidth = Math.min(
+      this.fieldMaxWidth,
+      Math.max(this.fieldMinWidth, Math.round(n)),
+    );
+    this.fieldWidthText = String(this.fieldWidth);
+  }
+
+  commitFieldWidthFromInput(): void {
+    const raw = String(this.fieldWidthText ?? '').trim();
+    if (raw === '') {
+      this.fieldWidthText = String(this.fieldWidth);
+      return;
+    }
+    const n = parseFloat(raw.replace(',', '.'));
+    if (!Number.isFinite(n)) {
+      this.fieldWidthText = String(this.fieldWidth);
+      return;
+    }
+    this.setFieldWidth(n);
+  }
+
+  onWidthInputEnter(event: Event): void {
+    (event.target as HTMLInputElement).blur();
   }
 
   onThemeChange(): void {

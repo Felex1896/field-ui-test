@@ -1,0 +1,32 @@
+---
+description: Figma file, local paths, playground/dev URLs for this project
+alwaysApply: true
+---
+
+# Project context
+
+Use these when implementing UI, comparing to the live demo, or calling Figma MCP tools.
+
+**Figma URL parsing:** In query strings, `node-id` uses `-` (e.g. `1-70`). For Figma API / MCP calls, use `:` instead (`1:70`). **File key** for this file: `RuZu30ftgHm89VyOMU8sOp`.
+
+## Figma
+
+- **Field_Standard(56):** [Vibe-Coding — Field_Standard frame](https://www.figma.com/design/RuZu30ftgHm89VyOMU8sOp/Vibe-Coding?node-id=1-70&t=1FiiN5okI4QuHLH7-1)
+
+## Local
+
+- **Project / workspace:** `/Users/fedor.korzun/Documents/cursor-projects/Field`
+
+## Remote
+
+- **Git repository:** https://github.com/Felex1896/field-ui-test
+- **Playground (deployed):** https://felex1896.github.io/field-ui-test/
+
+## Local dev (field-ui-test repo)
+
+- The GitHub app is Angular; after `ng serve`, it is usually at `http://localhost:4200/` (see that repo’s README).
+
+## Notes
+
+- Prefer existing components and tokens in this repo over guessing from Figma alone.
+- Compare UI against the deployed playground when checking parity.
