@@ -3,11 +3,12 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "deploy:gh-pages": "ng build --base-href /field-ui-test/ && gh-pages -d dist/field-demo/browser --nojekyll",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "start": "ng serve playground",
+    "build": "ng build playground",
+    "build:all": "ng build field-ui && ng build playground",
+    "deploy:gh-pages": "ng build playground --base-href /field-ui-test/ && gh-pages -d dist/playground/browser --nojekyll",
+    "watch": "ng build playground --watch --configuration development",
+    "test": "ng test playground"
   },
   "private": true,
   "packageManager": "npm@11.11.0",
@@ -27,6 +28,7 @@
     "@angular/compiler-cli": "^21.2.0",
     "gh-pages": "^6.3.0",
     "jsdom": "^28.0.0",
+    "ng-packagr": "^21.2.0",
     "prettier": "^3.8.1",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"

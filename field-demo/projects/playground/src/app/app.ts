@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { FieldStandardComponent } from './components/field-standard/field-standard.component';
+import { FieldStandardComponent } from 'field-ui';
 
 type IconSlot = 'leading' | 'trailing';
 
@@ -16,17 +16,13 @@ type IconSlot = 'leading' | 'trailing';
 export class App implements OnInit {
   fieldControl = new FormControl('');
 
-  /** Preview field width (px), controlled from the playground panel. */
   fieldWidth = 400;
-  /** Draft for the width input; committed on blur / Enter (avoids clamp-while-typing). */
   fieldWidthText: string | number = '400';
   readonly fieldMinWidth = 200;
   readonly fieldMaxWidth = 960;
 
-  // Theme
   theme: 'dark' | 'light' = 'dark';
 
-  // Content toggles & values
   showLabel = true;
   labelText = 'Label';
 
@@ -39,7 +35,6 @@ export class App implements OnInit {
   showSuffix = false;
   suffixText = 'Km';
 
-  // Icons
   showLeadingIcon = false;
   leadingIconName = 'menu';
   leadingIconSvg = '';
@@ -48,7 +43,6 @@ export class App implements OnInit {
   trailingIconName = 'info';
   trailingIconSvg = '';
 
-  // State overrides
   isDisabled = false;
   forceError = false;
 
@@ -116,7 +110,6 @@ export class App implements OnInit {
       const normalized = this.normalizeSvg(raw);
       if (slot === 'leading') this.leadingIconSvg = normalized;
       else this.trailingIconSvg = normalized;
-      // Reset input so the same file can be re-uploaded
       input.value = '';
     };
     reader.readAsText(file);
@@ -130,19 +123,10 @@ export class App implements OnInit {
     }
   }
 
-  /**
-   * Strips hardcoded fill/stroke color values from an SVG so that
-   * `currentColor` (driven by CSS) controls the icon color in both themes.
-   * Preserves `fill="none"` and `stroke="none"` (structural, not color).
-   */
   private normalizeSvg(svg: string): string {
     return svg
-      // Replace fill="#hex" / fill="rgb(...)" / fill="named-color" → currentColor
-      // but keep fill="none"
       .replace(/fill="(?!none\b)([^"]+)"/gi, 'fill="currentColor"')
-      // Replace stroke="#hex" / stroke="rgb(...)" → currentColor, keep stroke="none"
       .replace(/stroke="(?!none\b)([^"]+)"/gi, 'stroke="currentColor"')
-      // Same for style="fill:..." inline styles
       .replace(/style="([^"]*)fill\s*:\s*(?!none)[^;}"]+/gi, (_, pre) => `style="${pre}fill:currentColor`)
       .replace(/style="([^"]*)stroke\s*:\s*(?!none)[^;}"]+/gi, (_, pre) => `style="${pre}stroke:currentColor`);
   }

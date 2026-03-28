@@ -1,18 +1,20 @@
 # FieldDemo
 
-Angular playground inside the **Field** repo. **Run all commands from this directory** (`field-demo/`), not from the repo root.
+Angular **workspace** inside the **Field** repo. **Run all commands from this directory** (`field-demo/`).
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.3.
+- **`projects/field-ui/`** — Field UI library (`FieldStandardComponent`, tokens, shared services). Import from the `field-ui` path in apps.
+- **`projects/playground/`** — Playground app (preview + controls) served locally and on GitHub Pages.
+
+Generated with [Angular CLI](https://github.com/angular/angular-cli) 21.2.x.
 
 ## Development server
 
-From the repository root, `cd field-demo`, then start the dev server:
-
 ```bash
-ng serve
+npm start
+# same as: ng serve playground
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Open `http://localhost:4200/`. The app reloads when you change playground or library source.
 
 ## Code scaffolding
 
@@ -30,13 +32,12 @@ ng generate --help
 
 ## Building
 
-To build the project run:
-
 ```bash
-ng build
+npm run build          # playground only (typical)
+npm run build:all      # library (ng-packagr) then playground
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Artifacts: `dist/playground/`, and `dist/field-ui/` when you build the library.
 
 ## Running unit tests
 

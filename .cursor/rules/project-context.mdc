@@ -22,7 +22,7 @@ Use these when implementing UI, comparing to the live demo, or calling Figma MCP
 ## Repository layout
 
 - **Git remote** — [field-ui-test](https://github.com/Felex1896/field-ui-test) applies to the **whole** `Field` tree (not only `field-demo/`).
-- **`field-demo/`** — Angular playground; run **`npm`**, **`ng serve`**, **`npm run deploy:gh-pages`** from **`field-demo/`** (`http://localhost:4200/`).
+- **`field-demo/`** — Angular workspace: **`projects/field-ui/`** (library), **`projects/playground/`** (playground app). Run **`npm start`**, **`npm run deploy:gh-pages`** from **`field-demo/`** (`http://localhost:4200/`).
 - **Future packages** — Add as **siblings** of `field-demo/` under `Field/`, not inside `field-demo/`, unless you deliberately colocate them.
 - **Cursor rules** — Only **`.cursor/rules/`** at **`Field/`** (this file).
 
@@ -34,7 +34,7 @@ Use these when implementing UI, comparing to the live demo, or calling Figma MCP
 ## GitHub Pages — keep the playground current
 
 - The live playground is built from the **`gh-pages` branch**. **`main` alone does not update that site** — a deploy step is required.
-- **Whenever playground-visible code changes** (e.g. `field-demo/src/**`), run **`npm run deploy:gh-pages`** from **`field-demo/`** after your changes are ready (typically after pushing to `main`). Uses `base-href` `/field-ui-test/`.
+- **Whenever playground-visible code changes** (e.g. `field-demo/projects/playground/**` or `field-demo/projects/field-ui/**`), run **`npm run deploy:gh-pages`** from **`field-demo/`** after your changes are ready (typically after pushing to `main`). Uses `base-href` `/field-ui-test/`.
 - **Agent behavior:** After such changes, run that deploy (or tell the user to). Do not assume `git push` to `main` updated the site.
 
 ## Notes

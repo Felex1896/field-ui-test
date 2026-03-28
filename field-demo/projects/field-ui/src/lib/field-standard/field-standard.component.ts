@@ -115,7 +115,6 @@ export class FieldStandardComponent implements OnInit, OnChanges, OnDestroy {
     return v !== null && v !== undefined && v !== '';
   }
 
-  // Label floats to top when: focused, placeholder is visible, or field has a typed value
   get isLabelFloated(): boolean {
     return this.isFocused || this.showPlaceholder || this.hasValue;
   }
