@@ -52,7 +52,7 @@ export class FieldStandardComponent implements OnInit, OnChanges, OnDestroy {
   @Input() trailingIconSvg = '';
   @Input() forceError = false;
 
-  /** When true, shows a Figma-style option list under the field while focused; options are filtered by the current input (label substring, case-insensitive). */
+  /** When true, shows a Figma-style option list under the field while focused after the user has typed at least one character; options match by label substring (case-insensitive). */
   @Input() suggestEnabled = false;
   @Input() suggestOptions: FieldSuggestOption[] = [];
 
@@ -81,10 +81,10 @@ export class FieldStandardComponent implements OnInit, OnChanges, OnDestroy {
 
   get filteredSuggestItems(): FieldSuggestOption[] {
     if (!this.suggestEnabled || !this.suggestOptions?.length) return [];
-    const q = String(this.control.value ?? '').trim().toLowerCase();
-    const opts = this.suggestOptions;
-    if (!q) return opts;
-    return opts.filter((o) => o.label.toLowerCase().includes(q));
+    const raw = String(this.control.value ?? '').trim();
+    if (raw.length === 0) return [];
+    const q = raw.toLowerCase();
+    return this.suggestOptions.filter((o) => o.label.toLowerCase().includes(q));
   }
 
   get showSuggestPanel(): boolean {
