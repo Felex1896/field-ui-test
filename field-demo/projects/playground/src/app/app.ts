@@ -1,10 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FieldStandardComponent, FieldSuggestOption } from 'field-ui';
 
 type IconSlot = 'leading' | 'trailing';
+
+/** At this width (px) and below, controls live in a slide-out drawer opened via the menu button. */
+const PLAYGROUND_DRAWER_BREAKPOINT_PX = 900;
 
 const SUGGEST_OPTIONS_STORAGE_KEY = 'field-ui-test-playground-suggest-options';
 const MAX_SUGGEST_LINES = 100;
@@ -151,6 +154,9 @@ function textToOptions(text: string): FieldSuggestOption[] {
 export class App implements OnInit {
   readonly maxSuggestLines = MAX_SUGGEST_LINES;
 
+  /** Mobile / narrow: slide-out controls drawer open state. */
+  controlsDrawerOpen = false;
+
   fieldControl = new FormControl('');
 
   suggestEnabled = false;
@@ -194,6 +200,28 @@ export class App implements OnInit {
   ngOnInit(): void {
     this.applyTheme();
     this.loadSuggestOptionsFromStorage();
+  }
+
+  toggleControlsDrawer(): void {
+    this.controlsDrawerOpen = !this.controlsDrawerOpen;
+  }
+
+  closeControlsDrawer(): void {
+    this.controlsDrawerOpen = false;
+  }
+
+  @HostListener('window:resize')
+  onWindowResize(): void {
+    if (typeof window !== 'undefined' && window.innerWidth > PLAYGROUND_DRAWER_BREAKPOINT_PX) {
+      this.controlsDrawerOpen = false;
+    }
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  onDocumentKeydown(event: KeyboardEvent): void {
+    if (event.key !== 'Escape' || !this.controlsDrawerOpen) return;
+    event.preventDefault();
+    this.closeControlsDrawer();
   }
 
   setFieldWidth(value: number | string): void {
