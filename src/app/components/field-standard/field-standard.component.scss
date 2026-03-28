@@ -1,0 +1,259 @@
+:host {
+  display: block;
+  width: 400px;
+}
+
+// ─── Wrapper ─────────────────────────────────────────────────────────────────
+
+.field-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+// ─── Body ─────────────────────────────────────────────────────────────────────
+
+.body {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: var(--field-height); // 56px
+  width: 100%;
+  padding: 0 var(--field-padding-x);
+  border-radius: var(--field-border-radius);
+  background-color: var(--field-bg-default);
+  cursor: text;
+  overflow: hidden;
+  transition: background-color 150ms ease;
+
+  .bottom-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: var(--field-border-width);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 200ms ease;
+    pointer-events: none;
+  }
+}
+
+// ─── Text area ────────────────────────────────────────────────────────────────
+
+.text-area {
+  flex: 1 0 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  // Height matches body so input is always reachable
+  align-self: stretch;
+}
+
+// ─── Label ────────────────────────────────────────────────────────────────────
+
+.field-label {
+  display: block;
+  font-family: var(--field-font-family);
+  font-weight: 400;
+  color: var(--field-label-default);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+  width: 100%;
+  transition: color 150ms ease, font-size 150ms ease, line-height 150ms ease;
+
+  // Default: label centred at body size (no floated input row visible)
+  font-size: var(--field-font-size-body);
+  line-height: var(--field-line-height-body);
+  letter-spacing: var(--field-letter-spacing-body);
+}
+
+// ─── Input ────────────────────────────────────────────────────────────────────
+
+.field-input {
+  // Do NOT use flex: 1 — that expands the input and fights justify-content:center on parent
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  min-height: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--field-font-family);
+  font-size: var(--field-font-size-body);
+  font-weight: 400;
+  line-height: var(--field-line-height-body);
+  letter-spacing: var(--field-letter-spacing-body);
+  color: var(--field-text);
+  padding: 0;
+  cursor: text;
+  // Hidden by default when label is present and not floated
+  height: 0;
+  overflow: hidden;
+  transition: height 150ms ease;
+
+  &::placeholder {
+    color: var(--field-placeholder);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+// ─── No label: input always fully visible and centred ─────────────────────────
+
+.body:not(.has-label) {
+  .text-area {
+    justify-content: center;
+  }
+  .field-input {
+    height: var(--field-line-height-body); // 24px
+    overflow: visible;
+  }
+}
+
+// ─── Label floated: label shrinks to top, input row opens below ───────────────
+
+.body.has-label.label-floated {
+  .text-area {
+    justify-content: flex-start;
+    padding-top: 8px; // (56 - 16 - 24) / 2 = 8px — centres the label+input block
+  }
+
+  .field-label {
+    font-size: var(--field-font-size-label);
+    line-height: var(--field-line-height-label);
+    letter-spacing: var(--field-letter-spacing-label);
+    flex-shrink: 0;
+  }
+
+  .field-input {
+    height: var(--field-line-height-body);
+    overflow: visible;
+  }
+}
+
+// ─── Suffix ───────────────────────────────────────────────────────────────────
+
+.field-suffix {
+  flex-shrink: 0;
+  font-family: var(--field-font-family);
+  font-size: var(--field-font-size-body);
+  line-height: var(--field-line-height-body);
+  letter-spacing: var(--field-letter-spacing-body);
+  color: var(--field-suffix-default);
+  padding-left: 8px;
+  transition: color 150ms ease, margin-top 150ms ease;
+  // Centred by default (aligns with label-only or input-only)
+  margin-top: 0;
+
+  // When label is floated: shift down to align with input row centre
+  // inputCentre=36, suffixCentre was 34 at 12px → need +2px more → 14px
+  &.suffix-with-label {
+    margin-top: 14px;
+  }
+}
+
+// ─── Icons ────────────────────────────────────────────────────────────────────
+
+.leading-icon,
+.trailing-icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: var(--field-icon-default);
+
+  .icon-svg {
+    width: var(--field-icon-size);
+    height: var(--field-icon-size);
+  }
+
+  .icon-inline {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--field-icon-size);
+    height: var(--field-icon-size);
+    color: inherit;
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
+.leading-icon  { padding-right: var(--field-icon-gap); }
+.trailing-icon { padding-left: var(--field-icon-gap); }
+
+// ─── Hint ─────────────────────────────────────────────────────────────────────
+
+.field-hint {
+  height: 20px;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--field-padding-x);
+  font-family: var(--field-font-family);
+  font-size: var(--field-font-size-label);
+  font-weight: 400;
+  line-height: var(--field-line-height-label);
+  letter-spacing: var(--field-letter-spacing-label);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  box-sizing: border-box;
+
+  &.hint-default  { color: var(--field-hint-default); }
+  &.hint-error    { color: var(--field-hint-error); }
+  &.hint-disabled { color: var(--field-hint-disabled); }
+}
+
+// ─── State: Hover ─────────────────────────────────────────────────────────────
+
+.state-hover .body {
+  background-color: var(--field-bg-hover);
+}
+
+// ─── State: Active ────────────────────────────────────────────────────────────
+
+.state-active {
+  .body .bottom-line {
+    transform: scaleX(1);
+    background-color: var(--field-border-active);
+  }
+  .field-label { color: var(--field-label-active); }
+}
+
+// ─── State: Error ─────────────────────────────────────────────────────────────
+
+.state-error {
+  .body .bottom-line {
+    transform: scaleX(1);
+    background-color: var(--field-border-error);
+  }
+  .field-label { color: var(--field-label-error); }
+}
+
+// ─── State: Disabled ──────────────────────────────────────────────────────────
+
+.state-disabled {
+  .body {
+    background-color: var(--field-bg-disabled);
+    cursor: not-allowed;
+  }
+  .field-label   { color: var(--field-label-disabled); }
+  .field-input   {
+    color: var(--field-text-disabled);
+    cursor: not-allowed;
+    &::placeholder { color: var(--field-label-disabled); }
+  }
+  .field-suffix  { color: var(--field-suffix-disabled); }
+  .leading-icon,
+  .trailing-icon { color: var(--field-icon-disabled); }
+}

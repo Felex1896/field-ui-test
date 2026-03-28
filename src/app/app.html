@@ -1,0 +1,207 @@
+<div class="playground" [class.theme-light]="theme === 'light'">
+
+  <!-- ── Left: Field preview ─────────────────────────────────────────────── -->
+  <div class="preview-panel">
+    <p class="preview-label">Preview</p>
+    <div class="preview-field">
+      <app-field-standard
+        [control]="fieldControl"
+        [label]="labelText"
+        [showLabel]="showLabel"
+        [placeholder]="placeholderText"
+        [showPlaceholder]="showPlaceholder"
+        [hint]="hintText"
+        [showHint]="showHint"
+        [suffix]="suffixText"
+        [showSuffix]="showSuffix"
+        [showLeadingIcon]="showLeadingIcon"
+        [leadingIconName]="leadingIconName"
+        [leadingIconSvg]="leadingIconSvg"
+        [showTrailingIcon]="showTrailingIcon"
+        [trailingIconName]="trailingIconName"
+        [trailingIconSvg]="trailingIconSvg"
+        [forceError]="forceError"
+      />
+    </div>
+
+    <div class="state-badge-row">
+      <span class="state-badge">
+        State:
+        @if (fieldControl.disabled) {
+          <strong class="badge disabled">disabled</strong>
+        } @else if (forceError) {
+          <strong class="badge error">error</strong>
+        } @else {
+          <strong class="badge default">interact with the field →</strong>
+        }
+      </span>
+    </div>
+  </div>
+
+  <!-- ── Right: Controls panel ───────────────────────────────────────────── -->
+  <div class="controls-panel">
+    <h2 class="controls-title">Controls</h2>
+
+    <!-- Theme -->
+    <div class="control-group">
+      <div class="control-row">
+        <label class="control-label">Light Theme</label>
+        <label class="toggle">
+          <input type="checkbox" [ngModel]="theme === 'light'" (ngModelChange)="theme = $event ? 'light' : 'dark'; onThemeChange()" />
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Label -->
+    <div class="control-group">
+      <div class="control-row">
+        <label class="control-label">Label</label>
+        <label class="toggle">
+          <input type="checkbox" [(ngModel)]="showLabel" />
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+      @if (showLabel) {
+        <input class="text-input" type="text" [(ngModel)]="labelText" placeholder="Label text" />
+      }
+    </div>
+
+    <!-- Placeholder -->
+    <div class="control-group">
+      <div class="control-row">
+        <label class="control-label">Placeholder</label>
+        <label class="toggle">
+          <input type="checkbox" [(ngModel)]="showPlaceholder" />
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+      @if (showPlaceholder) {
+        <input class="text-input" type="text" [(ngModel)]="placeholderText" placeholder="Placeholder text" />
+      }
+    </div>
+
+    <!-- Hint -->
+    <div class="control-group">
+      <div class="control-row">
+        <label class="control-label">Hint</label>
+        <label class="toggle">
+          <input type="checkbox" [(ngModel)]="showHint" />
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+      @if (showHint) {
+        <input class="text-input" type="text" [(ngModel)]="hintText" placeholder="Hint text" />
+      }
+    </div>
+
+    <!-- Suffix -->
+    <div class="control-group">
+      <div class="control-row">
+        <label class="control-label">Suffix</label>
+        <label class="toggle">
+          <input type="checkbox" [(ngModel)]="showSuffix" />
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+      @if (showSuffix) {
+        <input class="text-input" type="text" [(ngModel)]="suffixText" placeholder="Suffix text" />
+      }
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Leading icon -->
+    <div class="control-group">
+      <div class="control-row">
+        <label class="control-label">Leading Icon</label>
+        <label class="toggle">
+          <input type="checkbox" [(ngModel)]="showLeadingIcon" />
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+      @if (showLeadingIcon) {
+        @if (!leadingIconSvg) {
+          <div class="icon-picker">
+            @for (icon of leadingIcons; track icon) {
+              <button
+                class="icon-btn"
+                [class.active]="leadingIconName === icon"
+                (click)="leadingIconName = icon"
+              >{{ icon }}</button>
+            }
+          </div>
+          <label class="upload-btn">
+            <input type="file" accept=".svg,image/svg+xml" (change)="onSvgUpload('leading', $event)" />
+            Upload SVG
+          </label>
+        } @else {
+          <div class="icon-preview-row">
+            <span class="icon-preview-label">Custom SVG uploaded</span>
+            <button class="icon-clear-btn" (click)="clearIcon('leading')">Remove</button>
+          </div>
+        }
+      }
+    </div>
+
+    <!-- Trailing icon -->
+    <div class="control-group">
+      <div class="control-row">
+        <label class="control-label">Trailing Icon</label>
+        <label class="toggle">
+          <input type="checkbox" [(ngModel)]="showTrailingIcon" />
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+      @if (showTrailingIcon) {
+        @if (!trailingIconSvg) {
+          <div class="icon-picker">
+            @for (icon of trailingIcons; track icon) {
+              <button
+                class="icon-btn"
+                [class.active]="trailingIconName === icon"
+                (click)="trailingIconName = icon"
+              >{{ icon }}</button>
+            }
+          </div>
+          <label class="upload-btn">
+            <input type="file" accept=".svg,image/svg+xml" (change)="onSvgUpload('trailing', $event)" />
+            Upload SVG
+          </label>
+        } @else {
+          <div class="icon-preview-row">
+            <span class="icon-preview-label">Custom SVG uploaded</span>
+            <button class="icon-clear-btn" (click)="clearIcon('trailing')">Remove</button>
+          </div>
+        }
+      }
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Disabled -->
+    <div class="control-group">
+      <div class="control-row">
+        <label class="control-label">Disabled</label>
+        <label class="toggle">
+          <input type="checkbox" [(ngModel)]="isDisabled" (ngModelChange)="onDisabledToggle()" />
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Force error -->
+    <div class="control-group">
+      <div class="control-row">
+        <label class="control-label">Force Error</label>
+        <label class="toggle">
+          <input type="checkbox" [(ngModel)]="forceError" />
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+    </div>
+
+  </div>
+</div>

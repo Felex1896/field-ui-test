@@ -1,0 +1,14 @@
+@use 'app/styles/tokens';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--field-font-family);
+  background-color: #1a1a1a;
+  color: rgba(253, 253, 253, 0.9);
+}
