@@ -24,7 +24,7 @@ Use these when implementing UI, comparing to the live demo, or calling Figma MCP
 - **Git remote** — [field-ui-test](https://github.com/Felex1896/field-ui-test) applies to the **whole** `Field` tree (not only `field-demo/`).
 - **`field-demo/`** — Angular workspace: **`projects/field-ui/`** (library), **`projects/playground/`** (playground app). Run **`npm start`**, **`npm run deploy:gh-pages`** from **`field-demo/`** (`http://localhost:4200/`).
 - **Future packages** — Add as **siblings** of `field-demo/` under `Field/`, not inside `field-demo/`, unless you deliberately colocate them.
-- **Cursor rules** — Only **`.cursor/rules/`** at **`Field/`** (this file).
+- **Cursor rules** — **`.cursor/rules/`** at **`Field/`**: **`project-context.mdc`** (this file, always), **`library-vs-playground.mdc`** (library vs demo scope, always), **`playground-responsive-layout.mdc`** (viewport + drawer pattern when editing **`field-demo/projects/playground/**`**).
 
 ## Remote
 

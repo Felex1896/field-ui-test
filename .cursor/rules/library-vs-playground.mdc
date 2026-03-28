@@ -1,0 +1,11 @@
+---
+description: Keep field-ui reusable; playground-only UX stays in the playground app
+alwaysApply: true
+---
+
+# Library vs playground (`field-demo`)
+
+- **`field-demo/projects/field-ui/`** — Publishable **library**. Keep it reusable: `@Input`s, `FormControl`, presentational behavior, and design tokens. **Do not** add playground-only concerns here (demo control wiring, `localStorage` for editor state, layout chrome, “controls panel” UI, or references to the deployed playground URL).
+- **`field-demo/projects/playground/`** — **Demo app** only. Put editable option lists, persisted demo preferences, responsive shell (drawer, scroll regions), and other tooling UX here. The playground **consumes** `field-ui` via **`public-api.ts`**; the library must not depend on the playground.
+
+When adding a feature, put it in the **library** only if it belongs in the shared design system API; otherwise keep it in the **playground** (or a future sibling package under `Field/`).
