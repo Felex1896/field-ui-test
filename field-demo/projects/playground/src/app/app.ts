@@ -6,6 +6,41 @@ import { FieldStandardComponent, FieldSuggestOption } from 'field-ui';
 
 type IconSlot = 'leading' | 'trailing';
 
+const SUGGEST_OPTIONS_STORAGE_KEY = 'field-ui-test-playground-suggest-options';
+const MAX_SUGGEST_LINES = 100;
+
+const DEFAULT_SUGGEST_OPTIONS: FieldSuggestOption[] = [
+  { label: 'Item 1', value: 'Item 1' },
+  { label: 'Item 2', value: 'Item 2' },
+  { label: 'Item 3', value: 'Item 3' },
+  { label: 'Item 4', value: 'Item 4' },
+  { label: 'Item 5', value: 'Item 5' },
+  { label: 'Item 6', value: 'Item 6' },
+];
+
+function optionsToText(opts: FieldSuggestOption[]): string {
+  return opts
+    .map((o) => (o.value && o.value !== o.label ? `${o.label} | ${o.value}` : o.label))
+    .join('\n');
+}
+
+function textToOptions(text: string): FieldSuggestOption[] {
+  return text
+    .split('\n')
+    .slice(0, MAX_SUGGEST_LINES)
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0)
+    .map((line) => {
+      const sep = line.indexOf('|');
+      if (sep !== -1) {
+        const label = line.slice(0, sep).trim();
+        const value = line.slice(sep + 1).trim();
+        return { label: label || value, value: value || label };
+      }
+      return { label: line, value: line };
+    });
+}
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -17,14 +52,9 @@ export class App implements OnInit {
   fieldControl = new FormControl('');
 
   suggestEnabled = false;
-  readonly suggestOptions: FieldSuggestOption[] = [
-    { label: 'Item 1', value: 'Item 1' },
-    { label: 'Item 2', value: 'Item 2' },
-    { label: 'Item 3', value: 'Item 3' },
-    { label: 'Item 4', value: 'Item 4' },
-    { label: 'Item 5', value: 'Item 5' },
-    { label: 'Item 6', value: 'Item 6' },
-  ];
+  suggestOptions: FieldSuggestOption[] = [...DEFAULT_SUGGEST_OPTIONS];
+  suggestOptionsDraft = optionsToText(DEFAULT_SUGGEST_OPTIONS);
+  suggestOptionsError = '';
 
   fieldWidth = 400;
   fieldWidthText: string | number = '400';
@@ -61,6 +91,7 @@ export class App implements OnInit {
 
   ngOnInit(): void {
     this.applyTheme();
+    this.loadSuggestOptionsFromStorage();
   }
 
   setFieldWidth(value: number | string): void {
@@ -99,6 +130,51 @@ export class App implements OnInit {
     document.documentElement.setAttribute('data-theme', this.theme);
     document.body.style.backgroundColor = this.theme === 'light' ? '#f5f5f5' : '#1a1a1a';
     document.body.style.color = this.theme === 'light' ? 'rgba(0,0,0,0.87)' : 'rgba(253,253,253,0.9)';
+  }
+
+  applySuggestOptions(): void {
+    const parsed = textToOptions(this.suggestOptionsDraft);
+    if (parsed.length === 0) {
+      this.suggestOptionsError = 'No valid options found. Enter at least one line.';
+      return;
+    }
+    this.suggestOptionsError = '';
+    this.suggestOptions = parsed;
+    this.suggestOptionsDraft = optionsToText(parsed);
+    try {
+      localStorage.setItem(SUGGEST_OPTIONS_STORAGE_KEY, JSON.stringify(parsed));
+    } catch {
+      // localStorage unavailable (e.g. private mode with storage blocked)
+    }
+  }
+
+  resetSuggestOptionsToDefaults(): void {
+    this.suggestOptions = [...DEFAULT_SUGGEST_OPTIONS];
+    this.suggestOptionsDraft = optionsToText(DEFAULT_SUGGEST_OPTIONS);
+    this.suggestOptionsError = '';
+    try {
+      localStorage.removeItem(SUGGEST_OPTIONS_STORAGE_KEY);
+    } catch {
+      // ignore
+    }
+  }
+
+  private loadSuggestOptionsFromStorage(): void {
+    try {
+      const raw = localStorage.getItem(SUGGEST_OPTIONS_STORAGE_KEY);
+      if (!raw) return;
+      const parsed: FieldSuggestOption[] = JSON.parse(raw);
+      if (
+        Array.isArray(parsed) &&
+        parsed.length > 0 &&
+        parsed.every((o) => typeof o.label === 'string')
+      ) {
+        this.suggestOptions = parsed;
+        this.suggestOptionsDraft = optionsToText(parsed);
+      }
+    } catch {
+      // malformed storage — fall back to defaults silently
+    }
   }
 
   onDisabledToggle(): void {

@@ -225,7 +225,28 @@
           <span class="toggle-track"></span>
         </label>
       </div>
-      <p class="control-hint">Type at least one character to open the list; it filters by label (e.g. <code>i</code>, <code>item</code>, <code>item 1</code>). Options: Item 1–6.</p>
+      <p class="control-hint">Type at least one character to filter options by label. Options are saved in your browser.</p>
+    </div>
+
+    <!-- Suggest options editor -->
+    <div class="control-group suggest-options-group">
+      <label class="control-label">Suggest options</label>
+      <p class="control-hint">One option per line. Use <code>Label | value</code> to set a separate value, or just <code>Label</code> to use the label as the value. Max {{ 100 }} lines.</p>
+      <textarea
+        class="suggest-options-textarea"
+        rows="6"
+        [(ngModel)]="suggestOptionsDraft"
+        spellcheck="false"
+        autocomplete="off"
+        placeholder="Item 1&#10;Item 2&#10;Display name | internal-id"
+      ></textarea>
+      @if (suggestOptionsError) {
+        <p class="suggest-options-error">{{ suggestOptionsError }}</p>
+      }
+      <div class="suggest-options-actions">
+        <button class="suggest-apply-btn" type="button" (click)="applySuggestOptions()">Apply</button>
+        <button class="suggest-reset-btn" type="button" (click)="resetSuggestOptionsToDefaults()">Reset to defaults</button>
+      </div>
     </div>
 
     <div class="divider"></div>
