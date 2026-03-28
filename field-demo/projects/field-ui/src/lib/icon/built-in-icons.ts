@@ -4,6 +4,10 @@
  */
 export const BUILT_IN_ICONS: ReadonlyMap<string, string> = new Map([
   [
+    'add',
+    '<path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+  ],
+  [
     'menu',
     '<path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
   ],

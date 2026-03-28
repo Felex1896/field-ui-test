@@ -48,48 +48,112 @@
     }
   </button>
 
-  <!-- ── Left: Field preview ─────────────────────────────────────────────── -->
+  <nav class="component-nav" aria-label="Playground components">
+    <p class="component-nav-title">Components</p>
+    <button
+      type="button"
+      class="component-nav-item"
+      [class.active]="selectedComponent() === 'field'"
+      (click)="setComponent('field')"
+    >
+      Field
+    </button>
+    <button
+      type="button"
+      class="component-nav-item"
+      [class.active]="selectedComponent() === 'chips'"
+      (click)="setComponent('chips')"
+    >
+      Chips
+    </button>
+  </nav>
+
+  <!-- ── Preview ─────────────────────────────────────────────────────────── -->
   <div class="preview-panel">
-    <p class="preview-label">Field · optional suggest list</p>
+    <div class="component-nav-mobile" aria-label="Playground components">
+      <button
+        type="button"
+        class="component-nav-btn"
+        [class.active]="selectedComponent() === 'field'"
+        (click)="setComponent('field')"
+      >
+        Field
+      </button>
+      <button
+        type="button"
+        class="component-nav-btn"
+        [class.active]="selectedComponent() === 'chips'"
+        (click)="setComponent('chips')"
+      >
+        Chips
+      </button>
+    </div>
+
+    @if (selectedComponent() === 'field') {
+      <p class="preview-label">Field · optional suggest list</p>
+    } @else {
+      <p class="preview-label">Chips · labeled pill</p>
+    }
 
     <div class="preview-field" [style.width.px]="fieldWidth">
-      <app-field-standard
-        [control]="fieldControl"
-        [label]="labelText"
-        [showLabel]="showLabel"
-        [placeholder]="placeholderText"
-        [showPlaceholder]="showPlaceholder"
-        [hint]="hintText"
-        [showHint]="showHint"
-        [suffix]="suffixText"
-        [showSuffix]="showSuffix"
-        [showLeadingIcon]="showLeadingIcon"
-        [leadingIconName]="leadingIconName"
-        [leadingIconSvg]="leadingIconSvg"
-        [showTrailingIcon]="showTrailingIcon"
-        [trailingIconName]="trailingIconName"
-        [trailingIconSvg]="trailingIconSvg"
-        [forceError]="forceError"
-        [suggestEnabled]="suggestEnabled"
-        [suggestOptions]="suggestSvc.options"
-      />
+      @if (selectedComponent() === 'field') {
+        <app-field-standard
+          [control]="fieldControl"
+          [label]="labelText"
+          [showLabel]="showLabel"
+          [placeholder]="placeholderText"
+          [showPlaceholder]="showPlaceholder"
+          [hint]="hintText"
+          [showHint]="showHint"
+          [suffix]="suffixText"
+          [showSuffix]="showSuffix"
+          [showLeadingIcon]="showLeadingIcon"
+          [leadingIconName]="leadingIconName"
+          [leadingIconSvg]="leadingIconSvg"
+          [showTrailingIcon]="showTrailingIcon"
+          [trailingIconName]="trailingIconName"
+          [trailingIconSvg]="trailingIconSvg"
+          [forceError]="forceError"
+          [suggestEnabled]="suggestEnabled"
+          [suggestOptions]="suggestSvc.options"
+        />
+      } @else {
+        <field-chip
+          [label]="chipLabel"
+          [appearance]="chipAppearance"
+          [tone]="chipTone"
+          [disabled]="chipDisabled"
+          [showLeadingIcon]="chipShowLeading"
+          [leadingIconName]="chipLeadingIconName"
+          [leadingIconSvg]="chipLeadingIconSvg"
+          [removable]="chipRemovable"
+        />
+      }
     </div>
 
     <div class="state-badge-row">
       <span class="state-badge">
         State:
-        @if (fieldControl.disabled) {
-          <strong class="badge disabled">disabled</strong>
-        } @else if (forceError) {
-          <strong class="badge error">error</strong>
+        @if (selectedComponent() === 'field') {
+          @if (fieldControl.disabled) {
+            <strong class="badge disabled">disabled</strong>
+          } @else if (forceError) {
+            <strong class="badge error">error</strong>
+          } @else {
+            <strong class="badge default">interact with the field →</strong>
+          }
         } @else {
-          <strong class="badge default">interact with the field →</strong>
+          @if (chipDisabled) {
+            <strong class="badge disabled">disabled</strong>
+          } @else {
+            <strong class="badge default">hover, focus, keyboard, remove →</strong>
+          }
         }
       </span>
     </div>
   </div>
 
-  <!-- ── Right: Controls panel (drawer on narrow viewports) ─────────────── -->
+  <!-- ── Controls panel (drawer on narrow viewports) ─────────────────────── -->
   <aside class="controls-panel" id="playground-controls-panel">
     <h2 class="controls-title">Controls</h2>
 
@@ -106,7 +170,7 @@
 
     <div class="divider"></div>
 
-    <!-- Field width -->
+    <!-- Width -->
     <div class="control-group">
       <label class="control-label" for="field-width-range">Width</label>
       <input
@@ -138,126 +202,205 @@
 
     <div class="divider"></div>
 
-    <!-- Label -->
-    <div class="control-group">
-      <div class="control-row">
-        <label class="control-label">Label</label>
-        <pg-toggle [(ngModel)]="showLabel" />
+    @if (selectedComponent() === 'field') {
+      <!-- Label -->
+      <div class="control-group">
+        <div class="control-row">
+          <label class="control-label">Label</label>
+          <pg-toggle [(ngModel)]="showLabel" />
+        </div>
+        @if (showLabel) {
+          <input class="text-input" type="text" [(ngModel)]="labelText" placeholder="Label text" />
+        }
       </div>
-      @if (showLabel) {
-        <input class="text-input" type="text" [(ngModel)]="labelText" placeholder="Label text" />
-      }
-    </div>
 
-    <!-- Placeholder -->
-    <div class="control-group">
-      <div class="control-row">
-        <label class="control-label">Placeholder</label>
-        <pg-toggle [(ngModel)]="showPlaceholder" />
+      <!-- Placeholder -->
+      <div class="control-group">
+        <div class="control-row">
+          <label class="control-label">Placeholder</label>
+          <pg-toggle [(ngModel)]="showPlaceholder" />
+        </div>
+        @if (showPlaceholder) {
+          <input
+            class="text-input"
+            type="text"
+            [(ngModel)]="placeholderText"
+            placeholder="Placeholder text"
+          />
+        }
       </div>
-      @if (showPlaceholder) {
+
+      <!-- Hint -->
+      <div class="control-group">
+        <div class="control-row">
+          <label class="control-label">Hint</label>
+          <pg-toggle [(ngModel)]="showHint" />
+        </div>
+        @if (showHint) {
+          <input class="text-input" type="text" [(ngModel)]="hintText" placeholder="Hint text" />
+        }
+      </div>
+
+      <!-- Suffix -->
+      <div class="control-group">
+        <div class="control-row">
+          <label class="control-label">Suffix</label>
+          <pg-toggle [(ngModel)]="showSuffix" />
+        </div>
+        @if (showSuffix) {
+          <input
+            class="text-input"
+            type="text"
+            [(ngModel)]="suffixText"
+            placeholder="Suffix text"
+          />
+        }
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Leading icon -->
+      <div class="control-group">
+        <div class="control-row">
+          <label class="control-label">Leading Icon</label>
+          <pg-toggle [(ngModel)]="showLeadingIcon" />
+        </div>
+        @if (showLeadingIcon) {
+          <pg-icon-picker
+            [icons]="leadingIcons"
+            [selectedIcon]="leadingIconName"
+            [customSvg]="leadingIconSvg"
+            (iconSelected)="onLeadingIconSelected($event)"
+            (svgUploaded)="onLeadingSvgUploaded($event)"
+            (svgCleared)="onLeadingSvgCleared()"
+          />
+        }
+      </div>
+
+      <!-- Trailing icon -->
+      <div class="control-group">
+        <div class="control-row">
+          <label class="control-label">Trailing Icon</label>
+          <pg-toggle [(ngModel)]="showTrailingIcon" />
+        </div>
+        @if (showTrailingIcon) {
+          <pg-icon-picker
+            [icons]="trailingIcons"
+            [selectedIcon]="trailingIconName"
+            [customSvg]="trailingIconSvg"
+            (iconSelected)="onTrailingIconSelected($event)"
+            (svgUploaded)="onTrailingSvgUploaded($event)"
+            (svgCleared)="onTrailingSvgCleared()"
+          />
+        }
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Suggest -->
+      <div class="control-group">
+        <div class="control-row">
+          <label class="control-label">Suggest</label>
+          <pg-toggle [(ngModel)]="suggestEnabled" />
+        </div>
+        <p class="control-hint">
+          Type at least one character to filter options by label. Options are saved in your browser.
+        </p>
+      </div>
+
+      <pg-suggest-editor />
+
+      <div class="divider"></div>
+
+      <!-- Disabled -->
+      <div class="control-group">
+        <div class="control-row">
+          <label class="control-label">Disabled</label>
+          <pg-toggle [(ngModel)]="isDisabled" (ngModelChange)="onDisabledToggle()" />
+        </div>
+      </div>
+
+      <!-- Force error -->
+      <div class="control-group">
+        <div class="control-row">
+          <label class="control-label">Force Error</label>
+          <pg-toggle [(ngModel)]="forceError" />
+        </div>
+      </div>
+    } @else {
+      <!-- Chips: label -->
+      <div class="control-group">
+        <label class="control-label" for="chip-label-input">Label</label>
         <input
+          id="chip-label-input"
           class="text-input"
           type="text"
-          [(ngModel)]="placeholderText"
-          placeholder="Placeholder text"
+          [(ngModel)]="chipLabel"
+          placeholder="Chip label"
         />
-      }
-    </div>
-
-    <!-- Hint -->
-    <div class="control-group">
-      <div class="control-row">
-        <label class="control-label">Hint</label>
-        <pg-toggle [(ngModel)]="showHint" />
       </div>
-      @if (showHint) {
-        <input class="text-input" type="text" [(ngModel)]="hintText" placeholder="Hint text" />
-      }
-    </div>
 
-    <!-- Suffix -->
-    <div class="control-group">
-      <div class="control-row">
-        <label class="control-label">Suffix</label>
-        <pg-toggle [(ngModel)]="showSuffix" />
+      <!-- Appearance -->
+      <div class="control-group">
+        <label class="control-label" for="chip-appearance-select">Appearance</label>
+        <select
+          id="chip-appearance-select"
+          class="text-input control-select"
+          [(ngModel)]="chipAppearance"
+        >
+          <option value="transparent">Transparent</option>
+          <option value="filled">Filled</option>
+          <option value="no-bg">No BG</option>
+          <option value="outlined">Outlined</option>
+        </select>
       </div>
-      @if (showSuffix) {
-        <input class="text-input" type="text" [(ngModel)]="suffixText" placeholder="Suffix text" />
-      }
-    </div>
 
-    <div class="divider"></div>
-
-    <!-- Leading icon -->
-    <div class="control-group">
-      <div class="control-row">
-        <label class="control-label">Leading Icon</label>
-        <pg-toggle [(ngModel)]="showLeadingIcon" />
+      <!-- Tone -->
+      <div class="control-group">
+        <label class="control-label" for="chip-tone-select">Tone</label>
+        <select id="chip-tone-select" class="text-input control-select" [(ngModel)]="chipTone">
+          <option value="neutral">Neutral</option>
+          <option value="primary">Primary</option>
+          <option value="danger">Danger</option>
+        </select>
+        <p class="control-hint">Primary and danger fills match Figma when appearance is Filled.</p>
       </div>
-      @if (showLeadingIcon) {
-        <pg-icon-picker
-          [icons]="leadingIcons"
-          [selectedIcon]="leadingIconName"
-          [customSvg]="leadingIconSvg"
-          (iconSelected)="onLeadingIconSelected($event)"
-          (svgUploaded)="onLeadingSvgUploaded($event)"
-          (svgCleared)="onLeadingSvgCleared()"
-        />
-      }
-    </div>
 
-    <!-- Trailing icon -->
-    <div class="control-group">
-      <div class="control-row">
-        <label class="control-label">Trailing Icon</label>
-        <pg-toggle [(ngModel)]="showTrailingIcon" />
+      <div class="divider"></div>
+
+      <div class="control-group">
+        <div class="control-row">
+          <label class="control-label">Leading icon</label>
+          <pg-toggle [(ngModel)]="chipShowLeading" />
+        </div>
+        @if (chipShowLeading) {
+          <pg-icon-picker
+            [icons]="chipLeadingIcons"
+            [selectedIcon]="chipLeadingIconName"
+            [customSvg]="chipLeadingIconSvg"
+            (iconSelected)="onChipLeadingIconSelected($event)"
+            (svgUploaded)="onChipLeadingSvgUploaded($event)"
+            (svgCleared)="onChipLeadingSvgCleared()"
+          />
+        }
       </div>
-      @if (showTrailingIcon) {
-        <pg-icon-picker
-          [icons]="trailingIcons"
-          [selectedIcon]="trailingIconName"
-          [customSvg]="trailingIconSvg"
-          (iconSelected)="onTrailingIconSelected($event)"
-          (svgUploaded)="onTrailingSvgUploaded($event)"
-          (svgCleared)="onTrailingSvgCleared()"
-        />
-      }
-    </div>
 
-    <div class="divider"></div>
-
-    <!-- Suggest -->
-    <div class="control-group">
-      <div class="control-row">
-        <label class="control-label">Suggest</label>
-        <pg-toggle [(ngModel)]="suggestEnabled" />
+      <div class="control-group">
+        <div class="control-row">
+          <label class="control-label">Removable</label>
+          <pg-toggle [(ngModel)]="chipRemovable" />
+        </div>
       </div>
-      <p class="control-hint">
-        Type at least one character to filter options by label. Options are saved in your browser.
-      </p>
-    </div>
 
-    <!-- Suggest options editor -->
-    <pg-suggest-editor />
+      <div class="divider"></div>
 
-    <div class="divider"></div>
-
-    <!-- Disabled -->
-    <div class="control-group">
-      <div class="control-row">
-        <label class="control-label">Disabled</label>
-        <pg-toggle [(ngModel)]="isDisabled" (ngModelChange)="onDisabledToggle()" />
+      <div class="control-group">
+        <div class="control-row">
+          <label class="control-label">Disabled</label>
+          <pg-toggle [(ngModel)]="chipDisabled" />
+        </div>
       </div>
-    </div>
-
-    <!-- Force error -->
-    <div class="control-group">
-      <div class="control-row">
-        <label class="control-label">Force Error</label>
-        <pg-toggle [(ngModel)]="forceError" />
-      </div>
-    </div>
+    }
 
     <p class="playground-foot">
       Stale UI after an update? Hard-refresh this page (e.g. Cmd+Shift+R).

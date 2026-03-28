@@ -1,6 +1,11 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { FieldStandardComponent } from 'field-ui';
+import {
+  FieldStandardComponent,
+  FieldChipComponent,
+  type ChipAppearance,
+  type ChipTone,
+} from 'field-ui';
 
 import { ThemeService } from './services/theme.service';
 import { SuggestOptionsService } from './services/suggest-options.service';
@@ -17,6 +22,7 @@ const PLAYGROUND_DRAWER_BREAKPOINT_PX = 900;
     ReactiveFormsModule,
     FormsModule,
     FieldStandardComponent,
+    FieldChipComponent,
     ToggleSwitchComponent,
     IconPickerComponent,
     SuggestEditorComponent,
@@ -31,6 +37,8 @@ const PLAYGROUND_DRAWER_BREAKPOINT_PX = 900;
 export class App {
   readonly themeSvc = inject(ThemeService);
   readonly suggestSvc = inject(SuggestOptionsService);
+
+  readonly selectedComponent = signal<'field' | 'chips'>('field');
 
   controlsDrawerOpen = false;
 
@@ -66,11 +74,25 @@ export class App {
   isDisabled = false;
   forceError = false;
 
+  chipLabel = 'Label';
+  chipAppearance: ChipAppearance = 'transparent';
+  chipTone: ChipTone = 'neutral';
+  chipDisabled = false;
+  chipShowLeading = true;
+  chipRemovable = true;
+  chipLeadingIconName = 'add';
+  chipLeadingIconSvg = '';
+
   readonly leadingIcons = ['menu', 'search', 'person', 'lock'];
   readonly trailingIcons = ['info', 'close', 'check', 'eye'];
+  readonly chipLeadingIcons = ['add', 'menu', 'search', 'person', 'lock'];
 
   constructor() {
     this.themeSvc.applyToDocument();
+  }
+
+  setComponent(which: 'field' | 'chips'): void {
+    this.selectedComponent.set(which);
   }
 
   toggleControlsDrawer(): void {
@@ -152,5 +174,17 @@ export class App {
 
   onTrailingSvgCleared(): void {
     this.trailingIconSvg = '';
+  }
+
+  onChipLeadingIconSelected(name: string): void {
+    this.chipLeadingIconName = name;
+  }
+
+  onChipLeadingSvgUploaded(svg: string): void {
+    this.chipLeadingIconSvg = svg;
+  }
+
+  onChipLeadingSvgCleared(): void {
+    this.chipLeadingIconSvg = '';
   }
 }

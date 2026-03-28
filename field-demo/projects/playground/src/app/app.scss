@@ -12,6 +12,100 @@ $playground-drawer-max: 900px;
   position: relative;
 }
 
+// ─── Component nav (wide: left rail; narrow: see media query) ─────────────────
+
+.component-nav-mobile {
+  display: none;
+}
+
+.component-nav {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 200px;
+  min-height: 0;
+  align-self: stretch;
+  padding: 32px 0 24px;
+  background-color: var(--pg-surface-alt);
+  border-right: 1px solid var(--pg-border);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease;
+}
+
+.component-nav-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--pg-text-faintest);
+  margin: 0 20px 12px;
+  font-family: var(--field-font-family);
+  transition: color 200ms ease;
+}
+
+.component-nav-item {
+  width: 100%;
+  margin: 0;
+  padding: 10px 20px;
+  border: none;
+  border-left: 3px solid transparent;
+  background: transparent;
+  text-align: left;
+  font-family: var(--field-font-family);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--pg-text-muted);
+  cursor: pointer;
+  transition:
+    color 150ms ease,
+    background 150ms ease,
+    border-color 150ms ease;
+
+  &:hover {
+    color: var(--pg-text);
+    background: var(--pg-btn-bg);
+  }
+
+  &.active {
+    color: var(--pg-accent);
+    background: var(--pg-accent-bg);
+    border-left-color: var(--pg-accent);
+  }
+}
+
+.component-nav-btn {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  padding: 8px 14px;
+  border: 1px solid var(--pg-border-light);
+  border-radius: 8px;
+  background: var(--pg-btn-bg);
+  font-family: var(--field-font-family);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--pg-text-muted);
+  cursor: pointer;
+  transition:
+    color 150ms ease,
+    background 150ms ease,
+    border-color 150ms ease;
+
+  &:hover {
+    color: var(--pg-text);
+    border-color: var(--pg-accent-border);
+  }
+
+  &.active {
+    color: var(--pg-accent);
+    background: var(--pg-accent-bg);
+    border-color: var(--pg-accent-border);
+  }
+}
+
 .drawer-backdrop {
   display: none;
 }
@@ -21,6 +115,20 @@ $playground-drawer-max: 900px;
 }
 
 @media (max-width: $playground-drawer-max) {
+  .component-nav {
+    display: none;
+  }
+
+  .component-nav-mobile {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-self: stretch;
+    width: 100%;
+    margin-bottom: 4px;
+  }
+
   .drawer-backdrop {
     display: block;
     position: fixed;
@@ -342,6 +450,10 @@ $playground-drawer-max: 900px;
 }
 
 // ─── Text inputs in controls ──────────────────────────────────────────────────
+
+.control-select {
+  cursor: pointer;
+}
 
 .text-input {
   width: 100%;

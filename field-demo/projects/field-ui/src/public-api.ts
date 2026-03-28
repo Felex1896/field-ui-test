@@ -5,6 +5,13 @@
 export { FieldStandardComponent } from './lib/field-standard/field-standard.component';
 export type { FieldState, FieldSuggestOption } from './lib/field-standard/field-standard.component';
 
+export { FieldChipComponent } from './lib/field-chip/field-chip.component';
+export type {
+  ChipAppearance,
+  ChipTone,
+  ChipVisualState,
+} from './lib/field-chip/field-chip.component';
+
 export { FieldIconComponent } from './lib/icon/field-icon.component';
 export { FieldIconRegistry } from './lib/icon/field-icon-registry.service';
 
