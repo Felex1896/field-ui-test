@@ -6,10 +6,10 @@ alwaysApply: true
 # Workspace
 
 - **Root:** Use **`Field/`** as the Cursor project root (not only `field-demo/`). Commit the whole tree: `.cursor/`, `field-demo/`, future sibling packages.
-- **`field-demo/`:** Angular 21 — `projects/field-ui/` (library), `projects/playground/` (demo). From **`field-demo/`:** `npm start` → http://localhost:4200/
+- **`field-demo/`:** Angular 21 — `projects/components/` (library: `field/`, `chips/`, `core/`), `projects/playground/` (demo). From **`field-demo/`:** `npm start` → http://localhost:4200/
 - **Lint:** `npm run lint` (ESLint with `@angular-eslint` + `typescript-eslint`). Run `npm run lint -- --fix` to auto-fix.
 - **Format:** `npm run format` (Prettier, writes in place) · `npm run format:check` (CI check). Config: `field-demo/.prettierrc`.
-- **Test:** `npm run test:lib` (field-ui only) · `npm run test:all` (library + playground). Always pass `--watch=false` in non-interactive contexts.
+- **Test:** `npm run test:lib` (components library only) · `npm run test:all` (library + playground). Always pass `--watch=false` in non-interactive contexts.
 - **CI:** `.github/workflows/ci.yml` runs format:check → lint → test:all → build:all on push/PR to `main`.
 - **GitHub:** [field-ui-test](https://github.com/Felex1896/field-ui-test) · live https://felex1896.github.io/field-ui-test/
 - **New packages:** Siblings of `field-demo/` under `Field/` unless you deliberately colocate.

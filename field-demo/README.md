@@ -2,7 +2,7 @@
 
 Angular **workspace** inside the **Field** repo. **Run all commands from this directory** (`field-demo/`).
 
-- **`projects/field-ui/`** — Field UI library (`FieldStandardComponent`, tokens, shared services). Import from the `field-ui` path in apps.
+- **`projects/components/`** — Shared UI library: **`field/`**, **`chips/`**, **`core/`** (icons, tokens, services). Import from the `components` path in apps.
 - **`projects/playground/`** — Playground app (preview + controls) served locally and on GitHub Pages.
 
 Generated with [Angular CLI](https://github.com/angular/angular-cli) 21.2.x.
@@ -37,7 +37,7 @@ npm run build          # playground only (typical)
 npm run build:all      # library (ng-packagr) then playground
 ```
 
-Artifacts: `dist/playground/`, and `dist/field-ui/` when you build the library.
+Artifacts: `dist/playground/`, and `dist/components/` when you build the library.
 
 ## Running unit tests
 

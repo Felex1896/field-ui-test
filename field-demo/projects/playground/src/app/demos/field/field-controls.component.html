@@ -1,0 +1,177 @@
+<div class="divider"></div>
+
+<!-- Width (field only) -->
+<div class="control-group">
+  <label class="control-label" for="field-width-range">Width</label>
+  <input
+    id="field-width-range"
+    class="width-slider"
+    type="range"
+    [min]="store.fieldWidthSliderMin"
+    [max]="store.fieldMaxWidth"
+    step="1"
+    [ngModel]="store.fieldWidth"
+    (ngModelChange)="store.setFieldWidth($event)"
+  />
+  <div class="width-input-row">
+    <label class="sr-only" for="field-width-number">Width in pixels</label>
+    <input
+      id="field-width-number"
+      class="text-input width-number-input"
+      type="number"
+      [min]="store.fieldWidthSliderMin"
+      [max]="store.fieldMaxWidth"
+      step="1"
+      [(ngModel)]="store.fieldWidthText"
+      (blur)="store.commitFieldWidthFromInput()"
+      (keydown.enter)="store.onWidthInputEnter($event)"
+    />
+    <span class="width-input-unit" aria-hidden="true">px</span>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- Label -->
+<div class="control-group">
+  <div class="control-row">
+    <label class="control-label">Label</label>
+    <pg-toggle [(ngModel)]="store.showLabel" />
+  </div>
+  @if (store.showLabel) {
+    <input class="text-input" type="text" [(ngModel)]="store.labelText" placeholder="Label text" />
+  }
+</div>
+
+<!-- Placeholder -->
+<div class="control-group">
+  <div class="control-row">
+    <label class="control-label">Placeholder</label>
+    <pg-toggle [(ngModel)]="store.showPlaceholder" />
+  </div>
+  @if (store.showPlaceholder) {
+    <input
+      class="text-input"
+      type="text"
+      [(ngModel)]="store.placeholderText"
+      placeholder="Placeholder text"
+    />
+  }
+</div>
+
+<!-- Hint -->
+<div class="control-group">
+  <div class="control-row">
+    <label class="control-label">Hint</label>
+    <pg-toggle [(ngModel)]="store.showHint" />
+  </div>
+  @if (store.showHint) {
+    <input class="text-input" type="text" [(ngModel)]="store.hintText" placeholder="Hint text" />
+  }
+</div>
+
+@if (!store.multiValueEnabled) {
+  <!-- Suffix (hidden for multi-value; not supported in the field layout) -->
+  <div class="control-group">
+    <div class="control-row">
+      <label class="control-label">Suffix</label>
+      <pg-toggle [(ngModel)]="store.showSuffix" />
+    </div>
+    @if (store.showSuffix) {
+      <input
+        class="text-input"
+        type="text"
+        [(ngModel)]="store.suffixText"
+        placeholder="Suffix text"
+      />
+    }
+  </div>
+
+  <div class="divider"></div>
+}
+
+<!-- Leading icon -->
+<div class="control-group">
+  <div class="control-row">
+    <label class="control-label">Leading Icon</label>
+    <pg-toggle [(ngModel)]="store.showLeadingIcon" />
+  </div>
+  @if (store.showLeadingIcon) {
+    <pg-icon-picker
+      [icons]="store.leadingIcons"
+      [selectedIcon]="store.leadingIconName"
+      [customSvg]="store.leadingIconSvg"
+      (iconSelected)="store.onLeadingIconSelected($event)"
+      (svgUploaded)="store.onLeadingSvgUploaded($event)"
+      (svgCleared)="store.onLeadingSvgCleared()"
+    />
+  }
+</div>
+
+<!-- Trailing icon -->
+<div class="control-group">
+  <div class="control-row">
+    <label class="control-label">Trailing Icon</label>
+    <pg-toggle [(ngModel)]="store.showTrailingIcon" />
+  </div>
+  @if (store.showTrailingIcon) {
+    <pg-icon-picker
+      [icons]="store.trailingIcons"
+      [selectedIcon]="store.trailingIconName"
+      [customSvg]="store.trailingIconSvg"
+      (iconSelected)="store.onTrailingIconSelected($event)"
+      (svgUploaded)="store.onTrailingSvgUploaded($event)"
+      (svgCleared)="store.onTrailingSvgCleared()"
+    />
+  }
+</div>
+
+<div class="divider"></div>
+
+<!-- Multi-value (chips + suggest) -->
+<div class="control-group">
+  <div class="control-row">
+    <label class="control-label">Multi-value</label>
+    <pg-toggle
+      [ngModel]="store.multiValueEnabled"
+      (ngModelChange)="store.onMultiValueEnabledChange($event)"
+    />
+  </div>
+  <p class="control-hint">
+    Type and press Enter to add chips, or pick from suggest. Turns Suggest on automatically. Preview width is at least 400px.
+  </p>
+</div>
+
+<!-- Suggest -->
+<div class="control-group">
+  <div class="control-row">
+    <label class="control-label">Suggest</label>
+    <pg-toggle
+      [ngModel]="store.suggestEnabled"
+      (ngModelChange)="store.onSuggestEnabledChange($event)"
+    />
+  </div>
+  <p class="control-hint">
+    Type at least one character to filter options by label. Options are saved in your browser.
+  </p>
+</div>
+
+<pg-suggest-editor />
+
+<div class="divider"></div>
+
+<!-- Disabled -->
+<div class="control-group">
+  <div class="control-row">
+    <label class="control-label">Disabled</label>
+    <pg-toggle [(ngModel)]="store.isDisabled" (ngModelChange)="store.onDisabledToggle()" />
+  </div>
+</div>
+
+<!-- Force error -->
+<div class="control-group">
+  <div class="control-row">
+    <label class="control-label">Force Error</label>
+    <pg-toggle [(ngModel)]="store.forceError" />
+  </div>
+</div>

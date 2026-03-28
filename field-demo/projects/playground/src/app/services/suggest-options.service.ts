@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import type { FieldSuggestOption } from 'field-ui';
+import type { SuggestOption } from 'components';
 import { DEFAULT_SUGGEST_OPTIONS } from '../data/default-suggest-options';
 
 const STORAGE_KEY = 'field-ui-test-playground-suggest-options';
@@ -9,7 +9,7 @@ const MAX_LINES = 100;
 export class SuggestOptionsService {
   readonly maxLines = MAX_LINES;
 
-  options: FieldSuggestOption[] = [...DEFAULT_SUGGEST_OPTIONS];
+  options: SuggestOption[] = [...DEFAULT_SUGGEST_OPTIONS];
   draft = this.optionsToText(DEFAULT_SUGGEST_OPTIONS);
   error = '';
 
@@ -44,13 +44,13 @@ export class SuggestOptionsService {
     }
   }
 
-  optionsToText(opts: FieldSuggestOption[]): string {
+  optionsToText(opts: SuggestOption[]): string {
     return opts
       .map((o) => (o.value && o.value !== o.label ? `${o.label} | ${o.value}` : o.label))
       .join('\n');
   }
 
-  private textToOptions(text: string): FieldSuggestOption[] {
+  private textToOptions(text: string): SuggestOption[] {
     return text
       .split('\n')
       .slice(0, MAX_LINES)
@@ -71,7 +71,7 @@ export class SuggestOptionsService {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return;
-      const parsed: FieldSuggestOption[] = JSON.parse(raw);
+      const parsed: SuggestOption[] = JSON.parse(raw);
       if (
         Array.isArray(parsed) &&
         parsed.length > 0 &&

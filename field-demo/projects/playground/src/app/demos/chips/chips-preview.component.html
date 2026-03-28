@@ -1,0 +1,23 @@
+<div class="preview-field preview-field--intrinsic">
+  <field-chip
+    [label]="store.chipLabel"
+    [appearance]="store.chipAppearance"
+    [tone]="store.chipTone"
+    [disabled]="store.chipDisabled"
+    [showLeadingIcon]="store.chipShowLeading"
+    [leadingIconName]="store.chipLeadingIconName"
+    [leadingIconSvg]="store.chipLeadingIconSvg"
+    [removable]="store.chipRemovable"
+  />
+</div>
+
+<div class="state-badge-row">
+  <span class="state-badge">
+    State:
+    @if (store.chipDisabled) {
+      <strong class="badge disabled">disabled</strong>
+    } @else {
+      <strong class="badge default">hover, focus, keyboard, remove →</strong>
+    }
+  </span>
+</div>

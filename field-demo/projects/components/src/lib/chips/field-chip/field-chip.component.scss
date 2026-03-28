@@ -1,0 +1,388 @@
+:host {
+  display: inline-block;
+  max-width: min(100%, var(--chip-max-width));
+  vertical-align: middle;
+}
+
+.chip-shell {
+  border-radius: var(--chip-radius);
+  transition:
+    box-shadow 120ms ease,
+    background-color 120ms ease;
+
+  &:not(.chip-disabled) {
+    cursor: pointer;
+  }
+
+  /** Staged for deletion in multi-value fields (before second Backspace). */
+  &:not(.chip-disabled).chip-staged-delete {
+    box-shadow: var(--chip-focus-ring);
+  }
+
+  &[data-palette-tone='primary']:not(.chip-disabled).chip-staged-delete,
+  &[data-palette-tone='danger']:not(.chip-disabled).chip-staged-delete {
+    box-shadow: var(--chip-focus-ring-accent);
+  }
+
+  /** Keyboard / programmatic focus only — not mouse click (see :focus-visible). */
+  &:not(.chip-disabled):has(:is(.chip-main, .chip-remove):focus-visible) {
+    box-shadow: var(--chip-focus-ring);
+  }
+
+  /** Figma: filled primary/danger focus uses dark frame + white border (double ring). */
+  &[data-palette-tone='primary']:not(.chip-disabled):has(
+      :is(.chip-main, .chip-remove):focus-visible
+    ),
+  &[data-palette-tone='danger']:not(.chip-disabled):has(
+      :is(.chip-main, .chip-remove):focus-visible
+    ) {
+    box-shadow: var(--chip-focus-ring-accent);
+  }
+}
+
+.chip-inner {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--chip-gap);
+  min-height: var(--chip-min-height);
+  padding: var(--chip-padding-y) var(--chip-padding-x);
+  border-radius: var(--chip-radius);
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    box-shadow 120ms ease;
+}
+
+/** Inset stroke so outer dimensions match non-outlined chips (no extra 2px from border-box). */
+.chip-shell.chip-appr-outlined .chip-inner {
+  border: none;
+  box-shadow: inset 0 0 0 1px var(--chip-outlined-border);
+}
+
+.chip-main,
+.chip-remove {
+  outline: none;
+}
+
+.chip-main {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--chip-gap);
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: inherit;
+  font-family: var(--field-font-family);
+  font-size: var(--chip-label-font-size);
+  font-weight: 400;
+  line-height: var(--chip-label-line-height);
+  letter-spacing: var(--chip-label-tracking);
+  text-align: left;
+  color: inherit;
+}
+
+/**
+ * Block (not flex) so `text-overflow: ellipsis` works on the text.
+ * No fixed height — `line-height` + `align-items: center` on `.chip-main` / `.chip-inner` centers the label.
+ */
+.chip-label {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: block;
+  padding: 0 var(--chip-label-padding-x);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: var(--chip-label-line-height);
+}
+
+.chip-leading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.chip-remove {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--chip-remove-slot);
+  height: var(--chip-remove-slot);
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: inherit;
+  color: inherit;
+  overflow: visible;
+  --field-icon-size: var(--chip-remove-icon-size);
+
+  /** Figma node 30:1902 — circular hover backdrop behind 24px close icon. */
+  &::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: var(--chip-remove-icon-size);
+    height: var(--chip-remove-icon-size);
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: var(--chip-remove-hover-bg);
+    opacity: 0;
+    transition: opacity 120ms ease;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  > field-icon {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+.chip-shell.chip-disabled {
+  cursor: not-allowed;
+}
+
+// ─── Interaction: hover uses real :hover (fine pointers only); pressed via :active ─
+
+@mixin chip-hover {
+  @media (hover: hover) and (pointer: fine) {
+    @content;
+  }
+}
+
+@mixin chip-pressed {
+  &:has(:is(.chip-main, .chip-remove):active) {
+    @content;
+  }
+}
+
+.chip-shell[data-palette-tone='primary'] .chip-remove::before,
+.chip-shell[data-palette-tone='danger'] .chip-remove::before {
+  background: var(--chip-remove-hover-bg-on-accent);
+}
+
+@include chip-hover {
+  .chip-shell:not(.chip-disabled) .chip-remove:not(:disabled):hover::before {
+    opacity: 1;
+  }
+}
+
+.chip-shell:not(.chip-disabled) .chip-remove:not(:disabled):focus-visible::before {
+  opacity: 1;
+}
+
+// ─── Neutral + transparent ───────────────────────────────────────────────────
+
+.chip-shell[data-palette-tone='neutral'].chip-appr-transparent:not(.chip-disabled) {
+  .chip-inner {
+    background: var(--chip-neutral-transparent-bg);
+  }
+
+  @include chip-hover {
+    &:hover:not(:has(:is(.chip-main, .chip-remove):active)) .chip-inner {
+      background: var(--chip-neutral-transparent-hover-bg);
+    }
+  }
+
+  @include chip-pressed {
+    .chip-inner {
+      background: var(--chip-neutral-transparent-pressed-bg);
+    }
+  }
+}
+
+.chip-shell.chip-disabled[data-palette-tone='neutral'].chip-appr-transparent .chip-inner {
+  background: var(--chip-disabled-bg-soft);
+}
+
+// ─── Neutral + filled (Figma: shell Basic Dark/100 + inner Basic Light 4/8/12%) ─
+
+.chip-shell[data-palette-tone='neutral'].chip-appr-filled:not(.chip-disabled) {
+  background-color: var(--chip-neutral-filled-shell-bg);
+
+  .chip-inner {
+    background: var(--chip-neutral-filled-inner-bg);
+  }
+
+  @include chip-hover {
+    &:hover:not(:has(:is(.chip-main, .chip-remove):active)) .chip-inner {
+      background: var(--chip-neutral-filled-inner-hover-bg);
+    }
+  }
+
+  @include chip-pressed {
+    .chip-inner {
+      background: var(--chip-neutral-filled-inner-pressed-bg);
+    }
+  }
+}
+
+.chip-shell.chip-disabled[data-palette-tone='neutral'].chip-appr-filled {
+  background-color: var(--chip-neutral-filled-shell-bg);
+
+  .chip-inner {
+    background: var(--chip-neutral-filled-inner-disabled-bg);
+  }
+}
+
+// ─── Neutral + no-bg ───────────────────────────────────────────────────────────
+
+.chip-shell[data-palette-tone='neutral'].chip-appr-no-bg:not(.chip-disabled) {
+  .chip-inner {
+    background: transparent;
+  }
+
+  @include chip-hover {
+    &:hover:not(:has(:is(.chip-main, .chip-remove):active)) .chip-inner {
+      background: var(--chip-neutral-no-bg-hover-bg);
+    }
+  }
+
+  @include chip-pressed {
+    .chip-inner {
+      background: var(--chip-neutral-no-bg-pressed-bg);
+    }
+  }
+}
+
+.chip-shell.chip-disabled[data-palette-tone='neutral'].chip-appr-no-bg .chip-inner {
+  background: transparent;
+}
+
+// ─── Neutral + outlined ──────────────────────────────────────────────────────
+
+.chip-shell[data-palette-tone='neutral'].chip-appr-outlined:not(.chip-disabled) {
+  .chip-inner {
+    background: transparent;
+  }
+
+  @include chip-hover {
+    &:hover:not(:has(:is(.chip-main, .chip-remove):active)) .chip-inner {
+      background: var(--chip-outlined-hover-bg);
+    }
+  }
+
+  @include chip-pressed {
+    .chip-inner {
+      background: var(--chip-outlined-pressed-bg);
+    }
+  }
+}
+
+.chip-shell.chip-disabled[data-palette-tone='neutral'].chip-appr-outlined .chip-inner {
+  background: var(--chip-outlined-disabled-bg);
+}
+
+// ─── Primary + filled ─────────────────────────────────────────────────────────
+
+.chip-shell[data-palette-tone='primary'].chip-appr-filled:not(.chip-disabled) {
+  .chip-inner {
+    background: var(--chip-primary-fill);
+  }
+
+  @include chip-hover {
+    &:hover:not(:has(:is(.chip-main, .chip-remove):active)) .chip-inner {
+      background:
+        linear-gradient(var(--chip-overlay-hover), var(--chip-overlay-hover)),
+        linear-gradient(var(--chip-primary-fill), var(--chip-primary-fill));
+    }
+  }
+
+  @include chip-pressed {
+    .chip-inner {
+      background:
+        linear-gradient(var(--chip-overlay-pressed), var(--chip-overlay-pressed)),
+        linear-gradient(var(--chip-primary-fill), var(--chip-primary-fill));
+    }
+  }
+}
+
+.chip-shell.chip-disabled[data-palette-tone='primary'].chip-appr-filled .chip-inner {
+  background: var(--chip-primary-disabled-fill);
+}
+
+// ─── Danger + filled ─────────────────────────────────────────────────────────
+
+.chip-shell[data-palette-tone='danger'].chip-appr-filled:not(.chip-disabled) {
+  .chip-inner {
+    background: var(--chip-danger-fill);
+  }
+
+  @include chip-hover {
+    &:hover:not(:has(:is(.chip-main, .chip-remove):active)) .chip-inner {
+      background:
+        linear-gradient(var(--chip-overlay-hover), var(--chip-overlay-hover)),
+        linear-gradient(var(--chip-danger-fill), var(--chip-danger-fill));
+    }
+  }
+
+  @include chip-pressed {
+    .chip-inner {
+      background:
+        linear-gradient(var(--chip-overlay-pressed), var(--chip-overlay-pressed)),
+        linear-gradient(var(--chip-danger-fill), var(--chip-danger-fill));
+    }
+  }
+}
+
+.chip-shell.chip-disabled[data-palette-tone='danger'].chip-appr-filled .chip-inner {
+  background: var(--chip-danger-disabled-fill);
+}
+
+// ─── Text / icon colors ───────────────────────────────────────────────────────
+
+.chip-shell[data-palette-tone='neutral'] {
+  .chip-main,
+  .chip-remove {
+    color: var(--chip-icon-neutral);
+  }
+  .chip-label {
+    color: var(--chip-text-neutral);
+  }
+}
+
+.chip-shell[data-palette-tone='primary'],
+.chip-shell[data-palette-tone='danger'] {
+  .chip-main,
+  .chip-remove {
+    color: var(--chip-icon-on-accent);
+  }
+  .chip-label {
+    color: var(--chip-text-on-accent);
+  }
+}
+
+.chip-shell.chip-disabled[data-palette-tone='neutral'] {
+  .chip-main,
+  .chip-remove {
+    color: var(--chip-icon-disabled-neutral);
+  }
+  .chip-label {
+    color: var(--chip-text-disabled-neutral);
+  }
+}
+
+.chip-shell.chip-disabled[data-palette-tone='primary'],
+.chip-shell.chip-disabled[data-palette-tone='danger'] {
+  .chip-main,
+  .chip-remove {
+    color: var(--chip-icon-disabled-on-accent);
+  }
+  .chip-label {
+    color: var(--chip-text-disabled-on-accent);
+  }
+}

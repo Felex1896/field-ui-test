@@ -1,0 +1,92 @@
+<div class="divider"></div>
+
+<!-- Chips: label -->
+<div class="control-group">
+  <label class="control-label" for="chip-label-input">Label</label>
+  <input
+    id="chip-label-input"
+    class="text-input"
+    type="text"
+    [(ngModel)]="store.chipLabel"
+    placeholder="Chip label"
+  />
+</div>
+
+<!-- Appearance (always-visible options) -->
+<div class="control-group">
+  <div class="pg-ctrl-legend" id="chip-appearance-legend">Appearance</div>
+  <div class="pg-ctrl-segmented" role="radiogroup" aria-labelledby="chip-appearance-legend">
+    @for (opt of store.chipAppearanceOptions; track opt.value) {
+      <label class="pg-ctrl-segment">
+        <input
+          type="radio"
+          class="sr-only"
+          name="pg-chip-appearance"
+          [value]="opt.value"
+          [ngModel]="store.chipAppearance"
+          (ngModelChange)="store.onChipAppearanceChange($event)"
+        />
+        <span class="pg-ctrl-segment-text">{{ opt.label }}</span>
+      </label>
+    }
+  </div>
+</div>
+
+<!-- Tone -->
+<div class="control-group">
+  <div class="pg-ctrl-legend" id="chip-tone-legend">Tone</div>
+  <div class="pg-ctrl-segmented" role="radiogroup" aria-labelledby="chip-tone-legend">
+    @for (opt of store.chipToneOptions; track opt.value) {
+      <label class="pg-ctrl-segment">
+        <input
+          type="radio"
+          class="sr-only"
+          name="pg-chip-tone"
+          [value]="opt.value"
+          [ngModel]="store.chipTone"
+          (ngModelChange)="store.onChipToneChange($event)"
+        />
+        <span class="pg-ctrl-segment-text">{{ opt.label }}</span>
+      </label>
+    }
+  </div>
+  <p class="control-hint">
+    Primary and Danger set appearance to Filled; Neutral sets it to Transparent. Any appearance
+    other than Filled sets tone to Neutral.
+  </p>
+</div>
+
+<div class="divider"></div>
+
+<div class="control-group">
+  <div class="control-row">
+    <label class="control-label">Leading icon</label>
+    <pg-toggle [(ngModel)]="store.chipShowLeading" />
+  </div>
+  @if (store.chipShowLeading) {
+    <pg-icon-picker
+      [icons]="store.chipLeadingIcons"
+      [selectedIcon]="store.chipLeadingIconName"
+      [customSvg]="store.chipLeadingIconSvg"
+      (iconSelected)="store.onChipLeadingIconSelected($event)"
+      (svgUploaded)="store.onChipLeadingSvgUploaded($event)"
+      (svgCleared)="store.onChipLeadingSvgCleared()"
+    />
+  }
+</div>
+
+<div class="control-group">
+  <div class="control-row">
+    <label class="control-label">Removable</label>
+    <pg-toggle [(ngModel)]="store.chipRemovable" />
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="control-group">
+  <div class="control-row">
+    <label class="control-label">Disabled</label>
+    <pg-toggle [(ngModel)]="store.chipDisabled" />
+  </div>
+</div>

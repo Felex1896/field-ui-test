@@ -1,11 +1,18 @@
-@use '../../field-ui/src/lib/styles/tokens';
+@use 'tokens';
+@use 'playground-demos.shared';
 
 // ─── Playground tokens (dark = default) ───────────────────────────────────────
 
 :root,
 [data-theme='dark'] {
-  --pg-surface: #1a1a1a;
+  /** Chrome (body, gutters); darker than the component canvas. */
+  --pg-surface: #111111;
   --pg-surface-alt: #111111;
+  /**
+   * Area behind Field, Chips, etc. Must match Figma Basic dark / 100 so neutral
+   * chips (base + translucent Basic light overlays) read correctly.
+   */
+  --pg-preview-canvas: var(--basic-dark-100);
   --pg-text: rgba(253, 253, 253, 0.9);
   --pg-text-muted: rgba(253, 253, 253, 0.7);
   --pg-text-faint: rgba(253, 253, 253, 0.4);
@@ -44,6 +51,7 @@
 [data-theme='light'] {
   --pg-surface: #f5f5f5;
   --pg-surface-alt: #ebebeb;
+  --pg-preview-canvas: var(--pg-surface);
   --pg-text: rgba(0, 0, 0, 0.87);
   --pg-text-muted: rgba(0, 0, 0, 0.7);
   --pg-text-faint: rgba(0, 0, 0, 0.45);
@@ -93,8 +101,8 @@ body {
 
 body {
   font-family: var(--field-font-family);
-  background-color: #1a1a1a;
-  color: rgba(253, 253, 253, 0.9);
+  background-color: var(--pg-surface);
+  color: var(--pg-text);
   overflow: hidden;
 }
 

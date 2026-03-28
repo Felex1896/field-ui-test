@@ -1,11 +1,11 @@
 ---
-description: field-ui = reusable library; playground = demo shell and controls only
+description: components = reusable library; playground = demo shell and controls only
 alwaysApply: true
 ---
 
 # Library vs playground
 
-- **`field-demo/projects/field-ui/`** — Publishable **library** using Angular signals (`input()`, `computed()`, `viewChild()`). Exports: `FieldStandardComponent`, `FieldIconComponent`, `FieldIconRegistry`, `SuggestPanelComponent`, `FigmaIconService`, plus types. Design tokens split into `_colors.scss`, `_typography.scss`, `_dimensions.scss`, `_dropdown.scss` (barrel: `_tokens.scss`). **No** playground-only code.
-- **`field-demo/projects/playground/`** — **Demo app**: `ThemeService` (signal-based), `SuggestOptionsService` (localStorage persistence), reusable sub-components (`ToggleSwitchComponent`, `IconPickerComponent`, `SuggestEditorComponent`). Playground-specific CSS custom properties (`--pg-*`) defined in `styles.scss`. Consumes **`field-ui`** via **`public-api.ts`**; **library must not depend on the playground.**
+- **`field-demo/projects/components/`** — Publishable **library** using Angular signals (`input()`, `computed()`, `viewChild()`). Source layout: `src/lib/core/` (icons, Figma service, tokens), `src/lib/field/` (field-standard, suggest-panel, models), `src/lib/chips/` (field-chip); room for more feature folders under `src/lib/`. Exports: `FieldStandardComponent`, `FieldChipComponent`, `FieldIconComponent`, `FieldIconRegistry`, `SuggestPanelComponent`, `FigmaIconService`, plus types. Apps import via **`from 'components'`** (path alias → `public-api.ts`). Design tokens live under `core/styles/` (`_colors.scss`, `_typography.scss`, `_dimensions.scss`, `_dropdown.scss`, `_chip.scss`; barrel `_tokens.scss`). **No** playground-only code.
+- **`field-demo/projects/playground/`** — **Demo app**: shell (`App`) plus `demos/field/` and `demos/chips/` (preview + controls + `FieldPlaygroundStore` / `ChipsPlaygroundStore`). `ThemeService` (signal-based), `SuggestOptionsService` (localStorage persistence), reusable sub-components (`ToggleSwitchComponent`, `IconPickerComponent`, `SuggestEditorComponent`). Playground-specific CSS (`--pg-*`) in `styles.scss`; shared demo/control rules in `playground-demos.shared.scss`. Consumes the **components** library via **`public-api.ts`**; **library must not depend on the playground.**
 
-Put shared design-system API in **`field-ui`**; everything else in **`playground`** or a future sibling under **`Field/`**.
+Put shared design-system API in **`components`**; everything else in **`playground`** or a future sibling under **`Field/`**.

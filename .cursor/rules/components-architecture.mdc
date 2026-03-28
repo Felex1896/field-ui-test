@@ -1,0 +1,34 @@
+---
+description: components library internal architecture — signals, icon system, suggest panel, tokens
+globs:
+  - field-demo/projects/components/**/*
+alwaysApply: false
+---
+
+# Components library architecture
+
+**Project:** `field-demo/projects/components/` — import published API via path alias **`components`** → `public-api.ts`.
+
+**Public API files:** `src/public-api.ts` is the ng-packagr entry; it re-exports domain barrels under `src/public-api/` — `field.ts` (field + suggest + `SuggestOption` model), `chips.ts`, `core.ts`. Add new exports to the matching barrel; for a **new domain**, add `src/public-api/<domain>.ts` and `export * from './public-api/<domain>'` in `public-api.ts`.
+
+**Layout:** `src/lib/core/` — `icon/`, `services/`, `styles/` (tokens). `src/lib/field/` — `field-standard/`, `suggest-panel/`, `models/`. `src/lib/chips/` — `field-chip/`. Add future areas as sibling folders under `src/lib/` (e.g. `button/`) and export from the appropriate `public-api/*.ts` barrel.
+
+**Suggest option type:** Canonical export is **`SuggestOption`** (`lib/field/models/suggest-option.ts`). **`FieldSuggestOption`** is a deprecated alias (same shape); use `SuggestOption` in new code.
+
+**Signals-first:** All component inputs use `input()` / `input.required()`, state uses `signal()`, derived values use `computed()`. No `@Input()` decorators, no `ChangeDetectorRef`, no `OnChanges`. Host events use `host` metadata in `@Component`.
+
+**Icon system:** `FieldIconComponent` (`<field-icon>`) renders icons by name (from `FieldIconRegistry`) or custom SVG. Built-in icons (add, menu, search, person, lock, info, close, close-small, check, eye) registered in `core/icon/built-in-icons.ts`. Consumers can register additional icons via `FieldIconRegistry.register()`.
+
+**Suggest panel:** `SuggestPanelComponent` (`<field-suggest-panel>`) is a standalone listbox with keyboard navigation (Arrow, Enter, Escape, Home, End), highlight tracking, and ARIA. The parent `FieldStandardComponent` owns filtering and open/close logic; the panel owns rendering and key handling.
+
+**Chips:** `FieldChipComponent` (`<field-chip>`) — appearance (`transparent` | `filled` | `no-bg` | `outlined`), tone (`neutral` | `primary` | `danger`), optional leading icon and remove control. Hover / pressed use CSS (`:hover`, `:has(:active)`); focus ring uses `:focus-visible` via `:has()`. Tokens in `_chip.scss` (barreled via `_tokens.scss`). Figma: [Chips labeled](https://www.figma.com/design/RuZu30ftgHm89VyOMU8sOp/Vibe-Coding?node-id=25-1441&t=1FiiN5okI4QuHLH7-1).
+
+**Tokens:** `core/styles/_tokens.scss` is a barrel that `@use`s `_colors.scss`, `_typography.scss`, `_dimensions.scss`, `_dropdown.scss`, `_chip.scss`. All values are CSS custom properties scoped to `:root` / `[data-theme]`. Playground imports via `@use 'tokens'` (Sass `includePaths` in `angular.json` → `projects/components/src/lib/core/styles`).
+
+## Checklist: new library component
+
+1. **`src/lib/<domain>/<name>/`** — component `.ts` / `.html` / `.scss`, co-located `*.spec.ts`.
+2. **Exports** — add to `src/public-api/<domain>.ts` (or create a new barrel + `export *` in `public-api.ts` for a new domain).
+3. **Playground** — `projects/playground/src/app/demos/<domain>/` (preview, controls, optional store); wire into the app shell when needed.
+4. **Tokens** — extend `src/lib/core/styles/` with shared CSS custom properties when the design needs new semantics; avoid one-off hex in component SCSS when a token fits.
+5. **Verify** (from `field-demo/`) — `npm run lint`, `npm run test:lib -- --watch=false`, `npm run build:all`.

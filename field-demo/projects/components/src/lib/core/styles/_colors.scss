@@ -1,0 +1,70 @@
+// ─── Dark theme (default) ─────────────────────────────────────────────────────
+
+:root,
+[data-theme='dark'] {
+  /** Figma: Basic dark / 100 */
+  --basic-dark-100: #1a1a1a;
+  /** Figma: Basic light / 100 (stroke, focus, light-theme chip shells) */
+  --basic-light-100: #fdfdfd;
+
+  --field-bg-default: rgba(253, 253, 253, 0.04);
+  --field-bg-hover: rgba(253, 253, 253, 0.08);
+  --field-bg-disabled: rgba(253, 253, 253, 0.02);
+
+  --field-label-default: rgba(253, 253, 253, 0.7);
+  /** UISystem / Field: Primary (dark only) / default — floated active label on dark canvas */
+  --field-label-active: #719bee;
+  --field-label-error: #e34646;
+  --field-label-disabled: rgba(253, 253, 253, 0.3);
+
+  --field-text: rgba(253, 253, 253, 0.9);
+  --field-placeholder: rgba(253, 253, 253, 0.55);
+  --field-text-disabled: rgba(253, 253, 253, 0.55);
+
+  /** UISystem: Primary / default — focus underline (text-field-line) on dark */
+  --field-border-active: #2e6be5;
+  --field-border-error: #e34646;
+
+  --field-hint-default: rgba(253, 253, 253, 0.55);
+  --field-hint-error: #e34646;
+  --field-hint-disabled: rgba(253, 253, 253, 0.3);
+
+  --field-suffix-default: rgba(253, 253, 253, 0.55);
+  --field-suffix-disabled: rgba(253, 253, 253, 0.3);
+
+  --field-icon-default: rgba(253, 253, 253, 0.7);
+  --field-icon-disabled: rgba(253, 253, 253, 0.3);
+}
+
+// ─── Light theme ──────────────────────────────────────────────────────────────
+
+[data-theme='light'] {
+  --basic-light-100: #fdfdfd;
+
+  --field-bg-default: rgba(0, 0, 0, 0.04);
+  --field-bg-hover: rgba(0, 0, 0, 0.08);
+  --field-bg-disabled: rgba(0, 0, 0, 0.02);
+
+  --field-label-default: rgba(0, 0, 0, 0.6);
+  /** Light: no “dark only” mode — label + underline both Primary / default */
+  --field-label-active: #2e6be5;
+  --field-label-error: #e34646;
+  --field-label-disabled: rgba(0, 0, 0, 0.26);
+
+  --field-text: rgba(0, 0, 0, 0.87);
+  --field-placeholder: rgba(0, 0, 0, 0.42);
+  --field-text-disabled: rgba(0, 0, 0, 0.38);
+
+  --field-border-active: #2e6be5;
+  --field-border-error: #e34646;
+
+  --field-hint-default: rgba(0, 0, 0, 0.6);
+  --field-hint-error: #e34646;
+  --field-hint-disabled: rgba(0, 0, 0, 0.26);
+
+  --field-suffix-default: rgba(0, 0, 0, 0.6);
+  --field-suffix-disabled: rgba(0, 0, 0, 0.26);
+
+  --field-icon-default: rgba(0, 0, 0, 0.54);
+  --field-icon-disabled: rgba(0, 0, 0, 0.26);
+}

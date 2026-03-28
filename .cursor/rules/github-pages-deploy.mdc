@@ -1,7 +1,7 @@
 ---
-description: When to run deploy:gh-pages and agent expectations for field-ui/playground
+description: When to run deploy:gh-pages and agent expectations for components/playground
 globs:
-  - field-demo/projects/field-ui/**/*
+  - field-demo/projects/components/**/*
   - field-demo/projects/playground/**/*
 alwaysApply: false
 ---

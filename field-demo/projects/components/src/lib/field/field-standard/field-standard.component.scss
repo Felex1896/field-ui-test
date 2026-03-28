@@ -1,0 +1,353 @@
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+// ─── Wrapper ─────────────────────────────────────────────────────────────────
+
+.field-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+// Anchor: positions suggest panel below the field body (body keeps overflow:hidden)
+.field-anchor {
+  position: relative;
+  width: 100%;
+}
+
+// ─── Body ─────────────────────────────────────────────────────────────────────
+
+.body {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: var(--field-height); // 56px
+  width: 100%;
+  padding: 0 var(--field-padding-x);
+  border-radius: var(--field-border-radius);
+  background-color: var(--field-bg-default);
+  cursor: text;
+  overflow: hidden;
+  transition: background-color 150ms ease;
+
+  &.multi-value {
+    align-items: flex-start;
+    height: auto;
+    min-height: var(--field-height);
+    padding-top: var(--field-multi-padding-y);
+    padding-bottom: var(--field-multi-padding-y);
+
+    .leading-icon,
+    .trailing-icon {
+      align-self: center;
+    }
+
+    .field-suffix.suffix-with-label {
+      align-self: center;
+      margin-top: 0;
+    }
+  }
+
+  .bottom-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: var(--field-border-width);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 200ms ease;
+    pointer-events: none;
+  }
+}
+
+// ─── Text area ────────────────────────────────────────────────────────────────
+
+.text-area {
+  flex: 1 0 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  // Height matches body so input is always reachable
+  align-self: stretch;
+}
+
+// ─── Label ────────────────────────────────────────────────────────────────────
+
+.field-label {
+  display: block;
+  font-family: var(--field-font-family);
+  font-weight: 400;
+  color: var(--field-label-default);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+  width: 100%;
+  transition:
+    color 150ms ease,
+    font-size 150ms ease,
+    line-height 150ms ease;
+
+  // Default: label centred at body size (no floated input row visible)
+  font-size: var(--field-font-size-body);
+  line-height: var(--field-line-height-body);
+  letter-spacing: var(--field-letter-spacing-body);
+}
+
+// ─── Input ────────────────────────────────────────────────────────────────────
+
+.field-input {
+  // Do NOT use flex: 1 — that expands the input and fights justify-content:center on parent
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  min-height: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--field-font-family);
+  font-size: var(--field-font-size-body);
+  font-weight: 400;
+  line-height: var(--field-line-height-body);
+  letter-spacing: var(--field-letter-spacing-body);
+  color: var(--field-text);
+  padding: 0;
+  cursor: text;
+  // Hidden by default when label is present and not floated
+  height: 0;
+  overflow: hidden;
+  transition: height 150ms ease;
+
+  &::placeholder {
+    color: var(--field-placeholder);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+// ─── No label: input always fully visible and centred ─────────────────────────
+
+.body:not(.has-label) {
+  .text-area {
+    justify-content: center;
+  }
+  .field-input {
+    height: var(--field-line-height-body); // 24px
+    overflow: visible;
+  }
+}
+
+// ─── Label floated: label shrinks to top, input row opens below ───────────────
+
+.body.has-label.label-floated {
+  .text-area {
+    justify-content: flex-start;
+    padding-top: var(--field-multi-padding-y);
+  }
+
+  &.multi-value .text-area {
+    padding-top: 0;
+  }
+
+  .field-label {
+    font-size: var(--field-font-size-label);
+    line-height: var(--field-line-height-label);
+    letter-spacing: var(--field-letter-spacing-label);
+    flex-shrink: 0;
+  }
+
+  .field-input {
+    height: var(--field-line-height-body);
+    overflow: visible;
+  }
+}
+
+// ─── Multi-value chip row ─────────────────────────────────────────────────────
+
+.chip-input-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--field-chip-row-gap);
+  width: 100%;
+  min-width: 0;
+}
+
+.body.multi-value .field-input--draft {
+  flex: 1 1 auto;
+  width: auto;
+  min-width: var(--field-chip-row-input-min-width);
+  max-width: 100%;
+}
+
+// ─── Suffix ───────────────────────────────────────────────────────────────────
+
+.field-suffix {
+  flex-shrink: 0;
+  font-family: var(--field-font-family);
+  font-size: var(--field-font-size-body);
+  line-height: var(--field-line-height-body);
+  letter-spacing: var(--field-letter-spacing-body);
+  color: var(--field-suffix-default);
+  padding-left: 8px;
+  transition:
+    color 150ms ease,
+    margin-top 150ms ease;
+  // Centred by default (aligns with label-only or input-only)
+  margin-top: 0;
+
+  // When label is floated: shift down to align with input row centre
+  // inputCentre=36, suffixCentre was 34 at 12px → need +2px more → 14px
+  &.suffix-with-label {
+    margin-top: 14px;
+  }
+}
+
+// ─── Icons ────────────────────────────────────────────────────────────────────
+
+.leading-icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: var(--field-icon-default);
+  padding-right: var(--field-icon-gap);
+}
+
+// Trailing icon: same horizontal footprint as pre-hover (gap + 24px glyph); 36×36 hover disc centered on icon.
+.trailing-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  width: calc(var(--field-icon-gap) + var(--field-icon-size));
+  height: var(--field-trailing-icon-hit-size);
+  padding-left: var(--field-icon-gap);
+  color: var(--field-icon-default);
+  overflow: visible;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: calc(var(--field-icon-gap) + var(--field-icon-size) / 2);
+    top: 50%;
+    width: var(--field-trailing-icon-hit-size);
+    height: var(--field-trailing-icon-hit-size);
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: var(--chip-remove-hover-bg, rgba(253, 253, 253, 0.08));
+    opacity: 0;
+    transition: opacity 120ms ease;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  > field-icon {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .field-wrapper:not(.state-disabled) .trailing-icon:hover::before {
+    opacity: 1;
+  }
+}
+
+.field-wrapper.state-disabled .trailing-icon::before {
+  opacity: 0 !important;
+}
+
+// ─── Hint ─────────────────────────────────────────────────────────────────────
+
+.field-hint {
+  height: 20px;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--field-padding-x);
+  font-family: var(--field-font-family);
+  font-size: var(--field-font-size-label);
+  font-weight: 400;
+  line-height: var(--field-line-height-label);
+  letter-spacing: var(--field-letter-spacing-label);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  box-sizing: border-box;
+
+  &.hint-default {
+    color: var(--field-hint-default);
+  }
+  &.hint-error {
+    color: var(--field-hint-error);
+  }
+  &.hint-disabled {
+    color: var(--field-hint-disabled);
+  }
+}
+
+// ─── State: Hover ─────────────────────────────────────────────────────────────
+
+.state-hover .body {
+  background-color: var(--field-bg-hover);
+}
+
+// ─── State: Active ────────────────────────────────────────────────────────────
+
+.state-active {
+  .body .bottom-line {
+    transform: scaleX(1);
+    background-color: var(--field-border-active);
+  }
+  .field-label {
+    color: var(--field-label-active);
+  }
+}
+
+// ─── State: Error ─────────────────────────────────────────────────────────────
+
+.state-error {
+  .body .bottom-line {
+    transform: scaleX(1);
+    background-color: var(--field-border-error);
+  }
+  .field-label {
+    color: var(--field-label-error);
+  }
+}
+
+// ─── State: Disabled ──────────────────────────────────────────────────────────
+
+.state-disabled {
+  .body {
+    background-color: var(--field-bg-disabled);
+    cursor: not-allowed;
+  }
+  .field-label {
+    color: var(--field-label-disabled);
+  }
+  .field-input {
+    color: var(--field-text-disabled);
+    cursor: not-allowed;
+    &::placeholder {
+      color: var(--field-label-disabled);
+    }
+  }
+  .field-suffix {
+    color: var(--field-suffix-disabled);
+  }
+  .leading-icon,
+  .trailing-icon {
+    color: var(--field-icon-disabled);
+  }
+}

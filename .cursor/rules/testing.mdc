@@ -8,15 +8,15 @@ alwaysApply: false
 **Runner:** Vitest via `@angular/build:unit-test`. No Karma, no Jasmine.
 
 **Spec locations:**
-- `field-ui` specs live next to their source file (e.g. `field-icon.service.spec.ts` beside `field-icon.service.ts`).
+- `components` library specs live next to their source file (e.g. `figma-icon.service.spec.ts` beside `figma-icon.service.ts`).
 - Playground specs live next to their component/service.
 
 **Run commands** (from `field-demo/`):
-- `npm run test:lib` — library only (`ng test field-ui --watch=false`)
-- `npm run test:all` — library + playground (`ng test field-ui && ng test playground`, both `--watch=false`)
-- `ng test field-ui --watch` — interactive watch mode for library
+- `npm run test:lib` — library only (`ng test components --watch=false`)
+- `npm run test:all` — library + playground (`ng test components && ng test playground`, both `--watch=false`)
+- `ng test components --watch` — interactive watch mode for library
 
-**What to test in `field-ui`:**
+**What to test in `components`:**
 - Pure logic: `FigmaIconService.parseUrl`, `SuggestPanelComponent` keyboard/highlight, `FieldStandardComponent` state/filtering/suppression.
 - Use `TestBed` + component fixtures for component tests. Prefer `ComponentFixture` over DOM assertions.
 - Do **not** assert pixel layout or CSS values.

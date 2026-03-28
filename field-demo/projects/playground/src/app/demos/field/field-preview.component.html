@@ -1,0 +1,37 @@
+<div class="preview-field" [style.width.px]="store.fieldWidth">
+  <app-field-standard
+    [control]="store.fieldControl"
+    [label]="store.labelText"
+    [showLabel]="store.showLabel"
+    [placeholder]="store.placeholderText"
+    [showPlaceholder]="store.showPlaceholder"
+    [hint]="store.hintText"
+    [showHint]="store.showHint"
+    [suffix]="store.suffixText"
+    [showSuffix]="store.showSuffix"
+    [showLeadingIcon]="store.showLeadingIcon"
+    [leadingIconName]="store.leadingIconName"
+    [leadingIconSvg]="store.leadingIconSvg"
+    [showTrailingIcon]="store.showTrailingIcon"
+    [trailingIconName]="store.trailingIconName"
+    [trailingIconSvg]="store.trailingIconSvg"
+    [forceError]="store.forceError"
+    [suggestEnabled]="store.suggestEnabled"
+    [suggestOptions]="suggestSvc.options"
+    [multiValueEnabled]="store.multiValueEnabled"
+    [(chipValues)]="store.chipValues"
+  />
+</div>
+
+<div class="state-badge-row">
+  <span class="state-badge">
+    State:
+    @if (store.fieldControl.disabled) {
+      <strong class="badge disabled">disabled</strong>
+    } @else if (store.forceError) {
+      <strong class="badge error">error</strong>
+    } @else {
+      <strong class="badge default">interact with the field →</strong>
+    }
+  </span>
+</div>

@@ -6,20 +6,20 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "field-ui": {
+    "components": {
       "projectType": "library",
-      "root": "projects/field-ui",
-      "sourceRoot": "projects/field-ui/src",
+      "root": "projects/components",
+      "sourceRoot": "projects/components/src",
       "prefix": "field",
       "architect": {
         "build": {
           "builder": "@angular/build:ng-packagr",
           "configurations": {
             "production": {
-              "tsConfig": "projects/field-ui/tsconfig.lib.prod.json"
+              "tsConfig": "projects/components/tsconfig.lib.prod.json"
             },
             "development": {
-              "tsConfig": "projects/field-ui/tsconfig.lib.json"
+              "tsConfig": "projects/components/tsconfig.lib.json"
             }
           },
           "defaultConfiguration": "production"
@@ -27,7 +27,7 @@
         "test": {
           "builder": "@angular/build:unit-test",
           "options": {
-            "tsConfig": "projects/field-ui/tsconfig.spec.json"
+            "tsConfig": "projects/components/tsconfig.spec.json"
           }
         }
       }
@@ -55,7 +55,10 @@
                 "input": "projects/playground/public"
               }
             ],
-            "styles": ["projects/playground/src/styles.scss"]
+            "styles": ["projects/playground/src/styles.scss"],
+            "stylePreprocessorOptions": {
+              "includePaths": ["projects/components/src/lib/core/styles"]
+            }
           },
           "configurations": {
             "production": {

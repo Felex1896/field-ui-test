@@ -1,2 +1,5 @@
 .DS_Store
 Thumbs.db
+
+# Cursor debug instrumentation (not part of the app)
+.cursor/debug-*.log

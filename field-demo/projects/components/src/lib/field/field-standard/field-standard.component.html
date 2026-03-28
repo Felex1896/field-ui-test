@@ -1,0 +1,103 @@
+<div class="field-wrapper" [class]="'state-' + state()" [class.suggest-open]="showSuggestPanel()">
+  <div class="field-anchor">
+    <div
+      class="body"
+      [class.has-label]="showLabel()"
+      [class.label-floated]="isLabelFloated()"
+      [class.multi-value]="multiValueEnabled()"
+      (click)="onBodyClick()"
+    >
+      <!-- Leading icon -->
+      @if (showLeadingIcon()) {
+        <div class="leading-icon">
+          <field-icon [name]="leadingIconName()" [svg]="leadingIconSvg()" />
+        </div>
+      }
+
+      <div class="text-area">
+        @if (showLabel()) {
+          <label class="field-label">{{ label() }}</label>
+        }
+        @if (!multiValueEnabled()) {
+          <input
+            #fieldInput
+            class="field-input"
+            [formControl]="control()"
+            [placeholder]="activePlaceholder()"
+            [attr.aria-expanded]="effectiveSuggestEnabled() ? showSuggestPanel() : null"
+            [attr.aria-controls]="effectiveSuggestEnabled() ? suggestPanel()?.listboxId : null"
+            [attr.aria-autocomplete]="effectiveSuggestEnabled() ? 'list' : null"
+            [attr.aria-activedescendant]="
+              effectiveSuggestEnabled() ? suggestPanel()?.activeDescendantId() : null
+            "
+            (focus)="onFocus()"
+            (blur)="onBlur()"
+            (input)="onSuggestInput()"
+            (keydown)="onSuggestKeydown($event)"
+          />
+        } @else {
+          <div class="chip-input-row">
+            @for (chip of chipValues(); track trackChip($index, chip)) {
+              <field-chip
+                class="field-value-chip"
+                [label]="chip"
+                appearance="transparent"
+                tone="neutral"
+                [disabled]="isDisabled()"
+                [deletionStaged]="isChipDeleteStaged($index)"
+                (remove)="onChipRemove($index)"
+                (deletionStagingCancel)="onChipDeletionStagingCancel()"
+              />
+            }
+            <input
+              #fieldInput
+              class="field-input field-input--draft"
+              [formControl]="control()"
+              [placeholder]="activePlaceholder()"
+              [attr.aria-expanded]="effectiveSuggestEnabled() ? showSuggestPanel() : null"
+              [attr.aria-controls]="effectiveSuggestEnabled() ? suggestPanel()?.listboxId : null"
+              [attr.aria-autocomplete]="effectiveSuggestEnabled() ? 'list' : null"
+              [attr.aria-activedescendant]="
+                effectiveSuggestEnabled() ? suggestPanel()?.activeDescendantId() : null
+              "
+              (focus)="onFocus()"
+              (blur)="onBlur()"
+              (input)="onSuggestInput()"
+              (keydown)="onSuggestKeydown($event)"
+            />
+          </div>
+        }
+      </div>
+
+      <!-- Suffix (not supported with multi-value chip row) -->
+      @if (showSuffix() && suffix() && !multiValueEnabled()) {
+        <span class="field-suffix" [class.suffix-with-label]="showLabel() && isLabelFloated()">{{
+          suffix()
+        }}</span>
+      }
+
+      <!-- Trailing icon -->
+      @if (showTrailingIcon()) {
+        <div class="trailing-icon">
+          <field-icon [name]="trailingIconName()" [svg]="trailingIconSvg()" />
+        </div>
+      }
+
+      <div class="bottom-line"></div>
+    </div>
+
+    @if (showSuggestPanel()) {
+      <field-suggest-panel
+        #suggestPanel
+        [items]="filteredSuggestItems()"
+        [selectedValue]="control().value"
+        (optionSelected)="onSuggestOptionSelected($event)"
+        (dismissed)="onSuggestDismissed()"
+      />
+    }
+  </div>
+
+  @if (showHint()) {
+    <div class="field-hint hint-{{ hintColor() }}">{{ hint() }}</div>
+  }
+</div>

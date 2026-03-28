@@ -1,0 +1,17 @@
+:root {
+  --field-height: 56px;
+  --field-border-radius: 4px;
+  --field-padding-x: 12px;
+  --field-border-width: 2px;
+  --field-icon-size: 24px;
+  --field-icon-gap: 12px;
+  /** Trailing icon tap/hover target (glyph stays `--field-icon-size`). */
+  --field-trailing-icon-hit-size: 36px;
+  --field-hint-pt: 4px;
+  /** Multi-value row: gap between chips and draft input (Figma Field with chips). */
+  --field-chip-row-gap: 8px;
+  /** Minimum width of the draft text field beside chips. */
+  --field-chip-row-input-min-width: 64px;
+  /** Vertical padding when the field body grows for chip wrap (Figma body py). */
+  --field-multi-padding-y: 8px;
+}

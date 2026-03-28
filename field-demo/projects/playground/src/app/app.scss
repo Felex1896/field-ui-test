@@ -229,7 +229,7 @@ $playground-drawer-max: 900px;
   align-items: center;
   justify-content: flex-start;
   padding: 48px 32px;
-  background-color: var(--pg-surface);
+  background-color: var(--pg-preview-canvas);
   gap: 24px;
   overflow-x: hidden;
   overflow-y: auto;
@@ -247,48 +247,6 @@ $playground-drawer-max: 900px;
   align-self: flex-start;
   padding-left: 8px;
   transition: color 200ms ease;
-}
-
-.preview-field {
-  flex-shrink: 0;
-  min-width: 0;
-  max-width: 100%;
-}
-
-.state-badge-row {
-  align-self: flex-start;
-  padding-left: 8px;
-}
-
-.state-badge {
-  font-size: 12px;
-  color: var(--pg-text-fainter);
-  font-family: var(--field-font-family);
-  transition: color 200ms ease;
-
-  .badge {
-    font-weight: 500;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 11px;
-    letter-spacing: 0.5px;
-
-    &.disabled {
-      background: var(--pg-badge-disabled-bg);
-      color: var(--pg-badge-disabled-text);
-    }
-
-    &.error {
-      background: rgba(227, 70, 70, 0.15);
-      color: var(--pg-error);
-    }
-
-    &.default {
-      background: transparent;
-      color: var(--pg-text-ghost);
-      font-weight: 400;
-    }
-  }
 }
 
 // ─── Controls panel (right) ───────────────────────────────────────────────────
@@ -322,21 +280,6 @@ $playground-drawer-max: 900px;
   transition: color 200ms ease;
 }
 
-// ─── Control group ────────────────────────────────────────────────────────────
-
-.control-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 10px 0;
-}
-
-.control-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
 .playground-foot {
   margin: 20px 0 0;
   padding-top: 16px;
@@ -345,146 +288,4 @@ $playground-drawer-max: 900px;
   line-height: 1.5;
   color: var(--pg-text-fainter);
   font-family: var(--field-font-family);
-}
-
-.control-hint {
-  margin: 0;
-  font-size: 11px;
-  line-height: 1.45;
-  color: var(--pg-text-faint);
-  font-family: var(--field-font-family);
-
-  code {
-    font-size: 10px;
-    padding: 1px 4px;
-    border-radius: 3px;
-    background: var(--pg-border-subtle);
-  }
-}
-
-.control-label {
-  font-size: 13px;
-  color: var(--pg-text-muted);
-  font-family: var(--field-font-family);
-  font-weight: 400;
-  letter-spacing: 0.1px;
-  transition: color 200ms ease;
-}
-
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-// ─── Width controls ──────────────────────────────────────────────────────────
-
-.width-input-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 2px;
-}
-
-.width-number-input {
-  flex: 1;
-  min-width: 0;
-  font-variant-numeric: tabular-nums;
-
-  &::-webkit-outer-spin-button,
-  &::-webkit-inner-spin-button {
-    appearance: none;
-    margin: 0;
-  }
-  appearance: textfield;
-}
-
-.width-input-unit {
-  flex-shrink: 0;
-  font-size: 13px;
-  font-family: var(--field-font-family);
-  color: var(--pg-text-faint);
-  transition: color 200ms ease;
-}
-
-.width-slider {
-  width: 100%;
-  height: 6px;
-  margin: 4px 0 0;
-  border-radius: 3px;
-  appearance: none;
-  cursor: pointer;
-  background: var(--pg-border-medium);
-  accent-color: var(--pg-accent);
-
-  &::-webkit-slider-thumb {
-    appearance: none;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: var(--pg-accent);
-    border: 2px solid var(--pg-slider-thumb-border);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
-  }
-
-  &::-moz-range-thumb {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: var(--pg-accent);
-    border: 2px solid var(--pg-slider-thumb-border);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
-  }
-
-  &::-moz-range-track {
-    height: 6px;
-    border-radius: 3px;
-    background: var(--pg-border-medium);
-  }
-}
-
-// ─── Text inputs in controls ──────────────────────────────────────────────────
-
-.control-select {
-  cursor: pointer;
-}
-
-.text-input {
-  width: 100%;
-  background: var(--pg-input-bg);
-  border: 1px solid var(--pg-border-light);
-  border-radius: 6px;
-  padding: 7px 10px;
-  font-family: var(--field-font-family);
-  font-size: 13px;
-  color: var(--pg-input-text);
-  outline: none;
-  transition:
-    border-color 150ms ease,
-    background 150ms ease,
-    color 150ms ease;
-  box-sizing: border-box;
-
-  &::placeholder {
-    color: var(--pg-input-placeholder);
-  }
-
-  &:focus {
-    border-color: var(--pg-accent-focus);
-  }
-}
-
-// ─── Divider ──────────────────────────────────────────────────────────────────
-
-.divider {
-  height: 1px;
-  background: var(--pg-border);
-  margin: 4px 0;
-  transition: background 200ms ease;
 }

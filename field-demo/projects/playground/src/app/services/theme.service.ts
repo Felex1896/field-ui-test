@@ -17,9 +17,6 @@ export class ThemeService {
   }
 
   applyToDocument(): void {
-    const t = this.theme();
-    document.documentElement.setAttribute('data-theme', t);
-    document.body.style.backgroundColor = t === 'light' ? '#f5f5f5' : '#1a1a1a';
-    document.body.style.color = t === 'light' ? 'rgba(0,0,0,0.87)' : 'rgba(253,253,253,0.9)';
+    document.documentElement.setAttribute('data-theme', this.theme());
   }
 }

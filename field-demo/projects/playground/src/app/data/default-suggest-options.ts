@@ -1,4 +1,4 @@
-import type { FieldSuggestOption } from 'field-ui';
+import type { SuggestOption } from 'components';
 
 const DEFAULT_SUGGEST_NAMES: readonly string[] = [
   'Apple',
@@ -103,7 +103,7 @@ const DEFAULT_SUGGEST_NAMES: readonly string[] = [
   'Zucchini',
 ];
 
-export const DEFAULT_SUGGEST_OPTIONS: FieldSuggestOption[] = DEFAULT_SUGGEST_NAMES.map((name) => ({
+export const DEFAULT_SUGGEST_OPTIONS: SuggestOption[] = DEFAULT_SUGGEST_NAMES.map((name) => ({
   label: name,
   value: name,
 }));
