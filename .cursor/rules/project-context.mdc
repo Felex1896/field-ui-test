@@ -1,0 +1,43 @@
+---
+description: Figma file, local paths, playground/dev URLs for this project
+alwaysApply: true
+---
+
+# Project context
+
+Use these when implementing UI, comparing to the live demo, or calling Figma MCP tools.
+
+**Workspace & Git:** Open the **`Field` folder** in Cursor and treat it as the **only** repo root. **Commit from `Field/`** (entire tree: `.cursor/`, `field-demo/`, future sibling packages). Do not open only `field-demo` as the project root if you want these rules and a single source of truth.
+
+**Figma URL parsing:** In query strings, `node-id` uses `-` (e.g. `1-70`). For Figma API / MCP calls, use `:` instead (`1:70`). **File key** for this file: `RuZu30ftgHm89VyOMU8sOp`.
+
+## Figma
+
+- **Field_Standard(56):** [Vibe-Coding — Field_Standard frame](https://www.figma.com/design/RuZu30ftgHm89VyOMU8sOp/Vibe-Coding?node-id=1-70&t=1FiiN5okI4QuHLH7-1)
+
+## Local
+
+- **Repo / workspace root:** `/Users/fedor.korzun/Documents/cursor-projects/Field` — may be renamed later; all Field-related code and Cursor rules live under this folder.
+
+## Repository layout
+
+- **Git remote** — [field-ui-test](https://github.com/Felex1896/field-ui-test) applies to the **whole** `Field` tree (not only `field-demo/`).
+- **`field-demo/`** — Angular playground; run **`npm`**, **`ng serve`**, **`npm run deploy:gh-pages`** from **`field-demo/`** (`http://localhost:4200/`).
+- **Future packages** — Add as **siblings** of `field-demo/` under `Field/`, not inside `field-demo/`, unless you deliberately colocate them.
+- **Cursor rules** — Only **`.cursor/rules/`** at **`Field/`** (this file).
+
+## Remote
+
+- **Git repository:** https://github.com/Felex1896/field-ui-test
+- **Playground (deployed):** https://felex1896.github.io/field-ui-test/
+
+## GitHub Pages — keep the playground current
+
+- The live playground is built from the **`gh-pages` branch**. **`main` alone does not update that site** — a deploy step is required.
+- **Whenever playground-visible code changes** (e.g. `field-demo/src/**`), run **`npm run deploy:gh-pages`** from **`field-demo/`** after your changes are ready (typically after pushing to `main`). Uses `base-href` `/field-ui-test/`.
+- **Agent behavior:** After such changes, run that deploy (or tell the user to). Do not assume `git push` to `main` updated the site.
+
+## Notes
+
+- Prefer existing components and tokens in this repo over guessing from Figma alone.
+- Compare UI against the deployed playground when checking parity; deploy first after demo changes (see **GitHub Pages**).
