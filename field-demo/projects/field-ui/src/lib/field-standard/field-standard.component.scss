@@ -71,7 +71,10 @@
   text-overflow: ellipsis;
   pointer-events: none;
   width: 100%;
-  transition: color 150ms ease, font-size 150ms ease, line-height 150ms ease;
+  transition:
+    color 150ms ease,
+    font-size 150ms ease,
+    line-height 150ms ease;
 
   // Default: label centred at body size (no floated input row visible)
   font-size: var(--field-font-size-body);
@@ -155,7 +158,9 @@
   letter-spacing: var(--field-letter-spacing-body);
   color: var(--field-suffix-default);
   padding-left: 8px;
-  transition: color 150ms ease, margin-top 150ms ease;
+  transition:
+    color 150ms ease,
+    margin-top 150ms ease;
   // Centred by default (aligns with label-only or input-only)
   margin-top: 0;
 
@@ -176,8 +181,12 @@
   color: var(--field-icon-default);
 }
 
-.leading-icon  { padding-right: var(--field-icon-gap); }
-.trailing-icon { padding-left: var(--field-icon-gap); }
+.leading-icon {
+  padding-right: var(--field-icon-gap);
+}
+.trailing-icon {
+  padding-left: var(--field-icon-gap);
+}
 
 // ─── Hint ─────────────────────────────────────────────────────────────────────
 
@@ -197,9 +206,15 @@
   width: 100%;
   box-sizing: border-box;
 
-  &.hint-default  { color: var(--field-hint-default); }
-  &.hint-error    { color: var(--field-hint-error); }
-  &.hint-disabled { color: var(--field-hint-disabled); }
+  &.hint-default {
+    color: var(--field-hint-default);
+  }
+  &.hint-error {
+    color: var(--field-hint-error);
+  }
+  &.hint-disabled {
+    color: var(--field-hint-disabled);
+  }
 }
 
 // ─── State: Hover ─────────────────────────────────────────────────────────────
@@ -215,7 +230,9 @@
     transform: scaleX(1);
     background-color: var(--field-border-active);
   }
-  .field-label { color: var(--field-label-active); }
+  .field-label {
+    color: var(--field-label-active);
+  }
 }
 
 // ─── State: Error ─────────────────────────────────────────────────────────────
@@ -225,7 +242,9 @@
     transform: scaleX(1);
     background-color: var(--field-border-error);
   }
-  .field-label { color: var(--field-label-error); }
+  .field-label {
+    color: var(--field-label-error);
+  }
 }
 
 // ─── State: Disabled ──────────────────────────────────────────────────────────
@@ -235,14 +254,21 @@
     background-color: var(--field-bg-disabled);
     cursor: not-allowed;
   }
-  .field-label   { color: var(--field-label-disabled); }
-  .field-input   {
+  .field-label {
+    color: var(--field-label-disabled);
+  }
+  .field-input {
     color: var(--field-text-disabled);
     cursor: not-allowed;
-    &::placeholder { color: var(--field-label-disabled); }
+    &::placeholder {
+      color: var(--field-label-disabled);
+    }
   }
-  .field-suffix  { color: var(--field-suffix-disabled); }
+  .field-suffix {
+    color: var(--field-suffix-disabled);
+  }
   .leading-icon,
-  .trailing-icon { color: var(--field-icon-disabled); }
+  .trailing-icon {
+    color: var(--field-icon-disabled);
+  }
 }
-

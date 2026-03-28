@@ -1,0 +1,27 @@
+---
+description: Where tests live, how to run them, and what to test
+alwaysApply: false
+---
+
+# Testing
+
+**Runner:** Vitest via `@angular/build:unit-test`. No Karma, no Jasmine.
+
+**Spec locations:**
+- `field-ui` specs live next to their source file (e.g. `field-icon.service.spec.ts` beside `field-icon.service.ts`).
+- Playground specs live next to their component/service.
+
+**Run commands** (from `field-demo/`):
+- `npm run test:lib` — library only (`ng test field-ui --watch=false`)
+- `npm run test:all` — library + playground (`ng test field-ui && ng test playground`, both `--watch=false`)
+- `ng test field-ui --watch` — interactive watch mode for library
+
+**What to test in `field-ui`:**
+- Pure logic: `FigmaIconService.parseUrl`, `SuggestPanelComponent` keyboard/highlight, `FieldStandardComponent` state/filtering/suppression.
+- Use `TestBed` + component fixtures for component tests. Prefer `ComponentFixture` over DOM assertions.
+- Do **not** assert pixel layout or CSS values.
+- Avoid `fakeAsync` unless zone.js is configured; use synchronous assertions where possible.
+
+**What to skip:**
+- Playground-only presentation logic (e.g. drawer open/close) unless it has non-trivial branching.
+- Third-party Angular internals.

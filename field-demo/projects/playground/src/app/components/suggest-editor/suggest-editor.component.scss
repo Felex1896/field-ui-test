@@ -43,7 +43,10 @@
   line-height: 1.6;
   color: var(--pg-input-text);
   outline: none;
-  transition: border-color 150ms ease, background 150ms ease, color 150ms ease;
+  transition:
+    border-color 150ms ease,
+    background 150ms ease,
+    color 150ms ease;
 
   &::placeholder {
     color: var(--pg-text-ghost);

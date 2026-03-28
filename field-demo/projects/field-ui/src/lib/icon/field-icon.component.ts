@@ -1,10 +1,4 @@
-import {
-  Component,
-  ChangeDetectionStrategy,
-  inject,
-  input,
-  computed,
-} from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, input, computed } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { FieldIconRegistry } from './field-icon-registry.service';
 
@@ -17,8 +11,13 @@ import { FieldIconRegistry } from './field-icon-registry.service';
     @if (customSvg()) {
       <span class="icon-inline" [innerHTML]="safeSvg()"></span>
     } @else if (registrySvg()) {
-      <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-        [innerHTML]="safeRegistrySvg()"></svg>
+      <svg
+        class="icon-svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        [innerHTML]="safeRegistrySvg()"
+      ></svg>
     }
   `,
   styles: `
@@ -64,9 +63,7 @@ export class FieldIconComponent {
     return this.registry.get(this.name());
   });
 
-  readonly safeSvg = computed(() =>
-    this.sanitizer.bypassSecurityTrustHtml(this.svg()),
-  );
+  readonly safeSvg = computed(() => this.sanitizer.bypassSecurityTrustHtml(this.svg()));
 
   readonly safeRegistrySvg = computed(() => {
     const content = this.registrySvg();

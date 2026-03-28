@@ -20,7 +20,7 @@ export class FigmaIconService {
 
       const parts = u.pathname.split('/').filter(Boolean);
       // pathname: ['design' | 'file', fileKey, ...]
-      const typeIdx = parts.findIndex(p => p === 'design' || p === 'file');
+      const typeIdx = parts.findIndex((p) => p === 'design' || p === 'file');
       if (typeIdx === -1 || typeIdx + 1 >= parts.length) return null;
 
       const fileKey = parts[typeIdx + 1];

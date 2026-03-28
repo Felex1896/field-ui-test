@@ -1,16 +1,7 @@
-import {
-  Component,
-  ChangeDetectionStrategy,
-  input,
-  output,
-  signal,
-  computed,
-} from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, output, signal, computed } from '@angular/core';
 
-export interface SuggestOption {
-  label: string;
-  value?: string;
-}
+import type { SuggestOption } from '../models/suggest-option';
+export type { SuggestOption } from '../models/suggest-option';
 
 let suggestPanelSeq = 0;
 

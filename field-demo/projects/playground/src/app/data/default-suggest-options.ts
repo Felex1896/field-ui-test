@@ -1,4 +1,4 @@
-import { FieldSuggestOption } from 'field-ui';
+import type { FieldSuggestOption } from 'field-ui';
 
 const DEFAULT_SUGGEST_NAMES: readonly string[] = [
   'Apple',

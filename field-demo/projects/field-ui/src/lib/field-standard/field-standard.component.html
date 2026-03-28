@@ -6,7 +6,6 @@
       [class.label-floated]="isLabelFloated()"
       (click)="fieldInput.focus()"
     >
-
       <!-- Leading icon -->
       @if (showLeadingIcon()) {
         <div class="leading-icon">
@@ -27,7 +26,9 @@
           [attr.aria-expanded]="suggestEnabled() ? showSuggestPanel() : null"
           [attr.aria-controls]="suggestEnabled() ? suggestPanel()?.listboxId : null"
           [attr.aria-autocomplete]="suggestEnabled() ? 'list' : null"
-          [attr.aria-activedescendant]="suggestEnabled() ? suggestPanel()?.activeDescendantId() : null"
+          [attr.aria-activedescendant]="
+            suggestEnabled() ? suggestPanel()?.activeDescendantId() : null
+          "
           (focus)="onFocus()"
           (blur)="onBlur()"
           (input)="onSuggestInput()"
@@ -37,7 +38,9 @@
 
       <!-- Suffix -->
       @if (showSuffix() && suffix()) {
-        <span class="field-suffix" [class.suffix-with-label]="showLabel() && isLabelFloated()">{{ suffix() }}</span>
+        <span class="field-suffix" [class.suffix-with-label]="showLabel() && isLabelFloated()">{{
+          suffix()
+        }}</span>
       }
 
       <!-- Trailing icon -->

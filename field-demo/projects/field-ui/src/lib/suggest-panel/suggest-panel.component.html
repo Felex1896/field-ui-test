@@ -1,9 +1,4 @@
-<ul
-  class="field-suggest-panel"
-  [id]="listboxId"
-  role="listbox"
-  tabindex="-1"
->
+<ul class="field-suggest-panel" [id]="listboxId" role="listbox" tabindex="-1">
   @for (opt of items(); track trackOption($index, opt)) {
     <li
       role="option"
@@ -14,6 +9,8 @@
       (mouseenter)="onOptionMouseEnter($index)"
       (pointerdown)="onOptionPointerDown($event)"
       (click)="onOptionClick(opt, $index)"
-    >{{ opt.label }}</li>
+    >
+      {{ opt.label }}
+    </li>
   }
 </ul>

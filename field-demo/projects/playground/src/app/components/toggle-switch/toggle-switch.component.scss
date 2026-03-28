@@ -32,7 +32,9 @@
       height: 14px;
       border-radius: 50%;
       background: var(--pg-toggle-thumb);
-      transition: transform 200ms ease, background 200ms ease;
+      transition:
+        transform 200ms ease,
+        background 200ms ease;
     }
   }
 

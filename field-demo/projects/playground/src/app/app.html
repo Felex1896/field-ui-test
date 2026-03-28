@@ -4,11 +4,7 @@
   [class.controls-drawer-open]="controlsDrawerOpen"
 >
   @if (controlsDrawerOpen) {
-    <div
-      class="drawer-backdrop"
-      (click)="closeControlsDrawer()"
-      aria-hidden="true"
-    ></div>
+    <div class="drawer-backdrop" (click)="closeControlsDrawer()" aria-hidden="true"></div>
   }
 
   <button
@@ -20,12 +16,34 @@
     [attr.aria-label]="controlsDrawerOpen ? 'Close controls panel' : 'Open controls panel'"
   >
     @if (controlsDrawerOpen) {
-      <svg class="drawer-menu-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <svg
+        class="drawer-menu-icon"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+      >
+        <path
+          d="M18 6L6 18M6 6l12 12"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        />
       </svg>
     } @else {
-      <svg class="drawer-menu-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <svg
+        class="drawer-menu-icon"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+      >
+        <path
+          d="M4 6h16M4 12h16M4 18h16"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        />
       </svg>
     }
   </button>
@@ -138,7 +156,12 @@
         <pg-toggle [(ngModel)]="showPlaceholder" />
       </div>
       @if (showPlaceholder) {
-        <input class="text-input" type="text" [(ngModel)]="placeholderText" placeholder="Placeholder text" />
+        <input
+          class="text-input"
+          type="text"
+          [(ngModel)]="placeholderText"
+          placeholder="Placeholder text"
+        />
       }
     </div>
 
@@ -210,7 +233,9 @@
         <label class="control-label">Suggest</label>
         <pg-toggle [(ngModel)]="suggestEnabled" />
       </div>
-      <p class="control-hint">Type at least one character to filter options by label. Options are saved in your browser.</p>
+      <p class="control-hint">
+        Type at least one character to filter options by label. Options are saved in your browser.
+      </p>
     </div>
 
     <!-- Suggest options editor -->
@@ -234,7 +259,8 @@
       </div>
     </div>
 
-    <p class="playground-foot">Stale UI after an update? Hard-refresh this page (e.g. Cmd+Shift+R).</p>
-
+    <p class="playground-foot">
+      Stale UI after an update? Hard-refresh this page (e.g. Cmd+Shift+R).
+    </p>
   </aside>
 </div>

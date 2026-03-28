@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FieldStandardComponent } from 'field-ui';
 
@@ -23,8 +23,12 @@ const PLAYGROUND_DRAWER_BREAKPOINT_PX = 900;
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss',
+  host: {
+    '(window:resize)': 'onWindowResize()',
+    '(document:keydown)': 'onDocumentKeydown($event)',
+  },
 })
-export class App implements OnInit {
+export class App {
   readonly themeSvc = inject(ThemeService);
   readonly suggestSvc = inject(SuggestOptionsService);
 
@@ -65,7 +69,7 @@ export class App implements OnInit {
   readonly leadingIcons = ['menu', 'search', 'person', 'lock'];
   readonly trailingIcons = ['info', 'close', 'check', 'eye'];
 
-  ngOnInit(): void {
+  constructor() {
     this.themeSvc.applyToDocument();
   }
 
@@ -77,14 +81,12 @@ export class App implements OnInit {
     this.controlsDrawerOpen = false;
   }
 
-  @HostListener('window:resize')
   onWindowResize(): void {
     if (typeof window !== 'undefined' && window.innerWidth > PLAYGROUND_DRAWER_BREAKPOINT_PX) {
       this.controlsDrawerOpen = false;
     }
   }
 
-  @HostListener('document:keydown', ['$event'])
   onDocumentKeydown(event: KeyboardEvent): void {
     if (event.key !== 'Escape' || !this.controlsDrawerOpen) return;
     event.preventDefault();

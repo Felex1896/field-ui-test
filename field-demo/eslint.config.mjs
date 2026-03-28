@@ -14,10 +14,21 @@ export default tseslint.config(
       '@angular-eslint': angular,
     },
     rules: {
-      '@angular-eslint/component-class-suffix': 'off',
+      // Angular component/directive conventions
+      '@angular-eslint/component-class-suffix': 'off', // App uses non-suffixed class names
       '@angular-eslint/directive-class-suffix': 'warn',
+      '@angular-eslint/no-empty-lifecycle-method': 'warn',
+      '@angular-eslint/no-input-rename': 'warn',
+      '@angular-eslint/no-output-native': 'error',
+      '@angular-eslint/no-output-rename': 'warn',
+      '@angular-eslint/use-lifecycle-interface': 'warn',
+      '@angular-eslint/contextual-lifecycle': 'error',
+      '@angular-eslint/no-conflicting-lifecycle': 'error',
+
+      // TypeScript quality
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/consistent-type-imports': ['warn', { prefer: 'type-imports' }],
     },
   },
   {
@@ -31,6 +42,8 @@ export default tseslint.config(
     rules: {
       '@angular-eslint/template/banana-in-box': 'error',
       '@angular-eslint/template/eqeqeq': ['error', { allowNullOrUndefined: true }],
+      '@angular-eslint/template/no-negated-async': 'warn',
+      '@angular-eslint/template/use-track-by-function': 'warn',
     },
   },
 );

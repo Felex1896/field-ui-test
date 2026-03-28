@@ -9,6 +9,10 @@
     "deploy:gh-pages": "ng build playground --base-href /field-ui-test/ && gh-pages -d dist/playground/browser --nojekyll",
     "watch": "ng build playground --watch --configuration development",
     "test": "ng test playground",
+    "test:lib": "ng test field-ui",
+    "test:all": "ng test field-ui && ng test playground",
+    "format": "prettier --write \"projects/**/*.{ts,html,scss}\"",
+    "format:check": "prettier --check \"projects/**/*.{ts,html,scss}\"",
     "lint": "eslint projects/"
   },
   "private": true,

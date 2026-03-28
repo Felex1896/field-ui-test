@@ -1,11 +1,9 @@
 @if (!customSvg()) {
   <div class="icon-picker">
     @for (icon of icons(); track icon) {
-      <button
-        class="icon-btn"
-        [class.active]="selectedIcon() === icon"
-        (click)="onIconClick(icon)"
-      >{{ icon }}</button>
+      <button class="icon-btn" [class.active]="selectedIcon() === icon" (click)="onIconClick(icon)">
+        {{ icon }}
+      </button>
     }
   </div>
   <label class="upload-btn">

@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, forwardRef } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import type { ControlValueAccessor } from '@angular/forms';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
   selector: 'pg-toggle',
@@ -14,11 +15,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   ],
   template: `
     <label class="toggle">
-      <input
-        type="checkbox"
-        [checked]="checked"
-        (change)="onToggle($event)"
-      />
+      <input type="checkbox" [checked]="checked" (change)="onToggle($event)" />
       <span class="toggle-track"></span>
     </label>
   `,

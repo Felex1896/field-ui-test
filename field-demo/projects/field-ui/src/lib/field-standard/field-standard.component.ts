@@ -2,7 +2,6 @@ import {
   Component,
   ChangeDetectionStrategy,
   ElementRef,
-  DestroyRef,
   inject,
   input,
   signal,
@@ -14,15 +13,13 @@ import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 import { FieldIconComponent } from '../icon/field-icon.component';
-import { SuggestPanelComponent, SuggestOption } from '../suggest-panel/suggest-panel.component';
+import { SuggestPanelComponent } from '../suggest-panel/suggest-panel.component';
+import type { SuggestOption } from '../models/suggest-option';
 
 export type FieldState = 'default' | 'hover' | 'active' | 'error' | 'disabled';
 
-export interface FieldSuggestOption {
-  label: string;
-  /** If omitted, `label` is written to the control when the option is chosen. */
-  value?: string;
-}
+/** Public alias kept for backward compatibility; same shape as SuggestOption. */
+export type { SuggestOption as FieldSuggestOption } from '../models/suggest-option';
 
 @Component({
   selector: 'app-field-standard',
@@ -38,7 +35,6 @@ export interface FieldSuggestOption {
 })
 export class FieldStandardComponent {
   private readonly host = inject(ElementRef<HTMLElement>);
-  private readonly destroyRef = inject(DestroyRef);
 
   readonly control = input<FormControl>(new FormControl(''));
   readonly label = input('Label');
@@ -59,7 +55,7 @@ export class FieldStandardComponent {
 
   /** When true, shows a Figma-style option list under the field while focused after the user has typed at least one character; options match by label substring (case-insensitive). */
   readonly suggestEnabled = input(false);
-  readonly suggestOptions = input<FieldSuggestOption[]>([]);
+  readonly suggestOptions = input<SuggestOption[]>([]);
 
   readonly inputRef = viewChild<ElementRef<HTMLInputElement>>('fieldInput');
   readonly suggestPanel = viewChild<SuggestPanelComponent>('suggestPanel');
@@ -126,7 +122,7 @@ export class FieldStandardComponent {
   });
 
   constructor() {
-    effect(() => {
+    effect((onCleanup) => {
       const ctrl = this.control();
       this.controlValue.set(ctrl.value);
 
@@ -141,7 +137,7 @@ export class FieldStandardComponent {
         }
       });
 
-      this.destroyRef.onDestroy(() => {
+      onCleanup(() => {
         statusSub.unsubscribe();
         valueSub.unsubscribe();
       });

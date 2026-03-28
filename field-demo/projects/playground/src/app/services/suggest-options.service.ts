@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FieldSuggestOption } from 'field-ui';
+import type { FieldSuggestOption } from 'field-ui';
 import { DEFAULT_SUGGEST_OPTIONS } from '../data/default-suggest-options';
 
 const STORAGE_KEY = 'field-ui-test-playground-suggest-options';

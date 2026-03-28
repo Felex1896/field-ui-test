@@ -45,7 +45,13 @@ export class IconPickerComponent {
     return svg
       .replace(/fill="(?!none\b)([^"]+)"/gi, 'fill="currentColor"')
       .replace(/stroke="(?!none\b)([^"]+)"/gi, 'stroke="currentColor"')
-      .replace(/style="([^"]*)fill\s*:\s*(?!none)[^;}"]+/gi, (_, pre) => `style="${pre}fill:currentColor`)
-      .replace(/style="([^"]*)stroke\s*:\s*(?!none)[^;}"]+/gi, (_, pre) => `style="${pre}stroke:currentColor`);
+      .replace(
+        /style="([^"]*)fill\s*:\s*(?!none)[^;}"]+/gi,
+        (_, pre) => `style="${pre}fill:currentColor`,
+      )
+      .replace(
+        /style="([^"]*)stroke\s*:\s*(?!none)[^;}"]+/gi,
+        (_, pre) => `style="${pre}stroke:currentColor`,
+      );
   }
 }
