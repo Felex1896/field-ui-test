@@ -1,0 +1,15 @@
+---
+description: Figma file ref; new UI follows Figma — polished code need not match Figma
+alwaysApply: true
+---
+
+# Figma (Field)
+
+- **File key:** `RuZu30ftgHm89VyOMU8sOp`. URLs use `node-id` with `-` (e.g. `1-70`); Figma API / MCP use `:` (`1:70`).
+- **Field_Standard(56):** [Vibe-Coding — frame](https://www.figma.com/design/RuZu30ftgHm89VyOMU8sOp/Vibe-Coding?node-id=1-70&t=1FiiN5okI4QuHLH7-1)
+
+**New work** — Treat **Figma as source of truth**: open the relevant frame and match structure, variants, and intent there. Reuse **`field-ui`** components and tokens when they fit; extend or add library pieces as needed.
+
+**Already polished in code** — **Do not** rework it to mirror Figma “just because.” If the implementation is stable and good, keep it. Revisit Figma only when the user asks for parity, a redesign, or you are deliberately replacing that UI.
+
+For **parity checks** on intentional matches, compare to the **deployed** playground (deploy after demo changes when needed).

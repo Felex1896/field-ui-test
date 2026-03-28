@@ -1,11 +1,11 @@
 ---
-description: Keep field-ui reusable; playground-only UX stays in the playground app
+description: field-ui = reusable library; playground = demo shell and controls only
 alwaysApply: true
 ---
 
-# Library vs playground (`field-demo`)
+# Library vs playground
 
-- **`field-demo/projects/field-ui/`** — Publishable **library**. Keep it reusable: `@Input`s, `FormControl`, presentational behavior, and design tokens. **Do not** add playground-only concerns here (demo control wiring, `localStorage` for editor state, layout chrome, “controls panel” UI, or references to the deployed playground URL).
-- **`field-demo/projects/playground/`** — **Demo app** only. Put editable option lists, persisted demo preferences, responsive shell (drawer, scroll regions), and other tooling UX here. The playground **consumes** `field-ui` via **`public-api.ts`**; the library must not depend on the playground.
+- **`field-demo/projects/field-ui/`** — Publishable **library** using Angular signals (`input()`, `computed()`, `viewChild()`). Exports: `FieldStandardComponent`, `FieldIconComponent`, `FieldIconRegistry`, `SuggestPanelComponent`, `FigmaIconService`, plus types. Design tokens split into `_colors.scss`, `_typography.scss`, `_dimensions.scss`, `_dropdown.scss` (barrel: `_tokens.scss`). **No** playground-only code.
+- **`field-demo/projects/playground/`** — **Demo app**: `ThemeService` (signal-based), `SuggestOptionsService` (localStorage persistence), reusable sub-components (`ToggleSwitchComponent`, `IconPickerComponent`, `SuggestEditorComponent`). Playground-specific CSS custom properties (`--pg-*`) defined in `styles.scss`. Consumes **`field-ui`** via **`public-api.ts`**; **library must not depend on the playground.**
 
-When adding a feature, put it in the **library** only if it belongs in the shared design system API; otherwise keep it in the **playground** (or a future sibling package under `Field/`).
+Put shared design-system API in **`field-ui`**; everything else in **`playground`** or a future sibling under **`Field/`**.

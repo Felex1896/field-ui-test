@@ -1,0 +1,13 @@
+---
+description: When to run deploy:gh-pages and agent expectations for field-ui/playground
+globs:
+  - field-demo/projects/field-ui/**/*
+  - field-demo/projects/playground/**/*
+alwaysApply: false
+---
+
+# GitHub Pages — detail
+
+- Site builds from **`gh-pages`**. **`git push` to `main`** does not refresh https://felex1896.github.io/field-ui-test/ without **`npm run deploy:gh-pages`** from **`field-demo/`** (uses **`base-href` `/field-ui-test/`**).
+- Run deploy when playground-visible work is ready (typically after pushing to `main`).
+- **Agent:** run deploy when appropriate, or say explicitly that the user should. Never assume push updated the live site.

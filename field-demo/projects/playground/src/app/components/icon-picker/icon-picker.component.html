@@ -1,0 +1,20 @@
+@if (!customSvg()) {
+  <div class="icon-picker">
+    @for (icon of icons(); track icon) {
+      <button
+        class="icon-btn"
+        [class.active]="selectedIcon() === icon"
+        (click)="onIconClick(icon)"
+      >{{ icon }}</button>
+    }
+  </div>
+  <label class="upload-btn">
+    <input type="file" accept=".svg,image/svg+xml" (change)="onSvgUpload($event)" />
+    Upload SVG
+  </label>
+} @else {
+  <div class="icon-preview-row">
+    <span class="icon-preview-label">Custom SVG uploaded</span>
+    <button class="icon-clear-btn" (click)="onClear()">Remove</button>
+  </div>
+}

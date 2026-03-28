@@ -1,20 +1,20 @@
 import {
   Component,
-  Input,
-  OnInit,
-  OnChanges,
-  OnDestroy,
-  SimpleChanges,
-  HostListener,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   ElementRef,
-  ViewChild,
+  DestroyRef,
+  inject,
+  input,
+  signal,
+  computed,
+  viewChild,
+  effect,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { Subscription } from 'rxjs';
+
+import { FieldIconComponent } from '../icon/field-icon.component';
+import { SuggestPanelComponent, SuggestOption } from '../suggest-panel/suggest-panel.component';
 
 export type FieldState = 'default' | 'hover' | 'active' | 'error' | 'disabled';
 
@@ -24,295 +24,190 @@ export interface FieldSuggestOption {
   value?: string;
 }
 
-let fieldStandardSuggestSeq = 0;
-
 @Component({
   selector: 'app-field-standard',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FieldIconComponent, SuggestPanelComponent],
   templateUrl: './field-standard.component.html',
   styleUrl: './field-standard.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '(mouseenter)': 'onMouseEnter()',
+    '(mouseleave)': 'onMouseLeave()',
+  },
 })
-export class FieldStandardComponent implements OnInit, OnChanges, OnDestroy {
-  @Input() control: FormControl = new FormControl('');
-  @Input() label = 'Label';
-  @Input() showLabel = true;
-  @Input() placeholder = 'Placeholder';
-  @Input() showPlaceholder = true;
-  @Input() hint = '';
-  @Input() showHint = false;
-  @Input() suffix = '';
-  @Input() showSuffix = false;
-  @Input() showLeadingIcon = false;
-  @Input() leadingIconName = 'menu';
-  @Input() leadingIconSvg = '';
-  @Input() showTrailingIcon = false;
-  @Input() trailingIconName = 'info';
-  @Input() trailingIconSvg = '';
-  @Input() forceError = false;
+export class FieldStandardComponent {
+  private readonly host = inject(ElementRef<HTMLElement>);
+  private readonly destroyRef = inject(DestroyRef);
+
+  readonly control = input<FormControl>(new FormControl(''));
+  readonly label = input('Label');
+  readonly showLabel = input(true);
+  readonly placeholder = input('Placeholder');
+  readonly showPlaceholder = input(true);
+  readonly hint = input('');
+  readonly showHint = input(false);
+  readonly suffix = input('');
+  readonly showSuffix = input(false);
+  readonly showLeadingIcon = input(false);
+  readonly leadingIconName = input('menu');
+  readonly leadingIconSvg = input('');
+  readonly showTrailingIcon = input(false);
+  readonly trailingIconName = input('info');
+  readonly trailingIconSvg = input('');
+  readonly forceError = input(false);
 
   /** When true, shows a Figma-style option list under the field while focused after the user has typed at least one character; options match by label substring (case-insensitive). */
-  @Input() suggestEnabled = false;
-  @Input() suggestOptions: FieldSuggestOption[] = [];
+  readonly suggestEnabled = input(false);
+  readonly suggestOptions = input<FieldSuggestOption[]>([]);
 
-  @ViewChild('fieldInput') private inputRef?: ElementRef<HTMLInputElement>;
+  readonly inputRef = viewChild<ElementRef<HTMLInputElement>>('fieldInput');
+  readonly suggestPanel = viewChild<SuggestPanelComponent>('suggestPanel');
 
-  readonly suggestInstanceId = `fldsug-${++fieldStandardSuggestSeq}`;
-
-  isFocused = false;
-  isHovered = false;
-  highlightedSuggestIndex = 0;
+  readonly isFocused = signal(false);
+  readonly isHovered = signal(false);
   /** After Escape or picking an option, hide the list until the user types again or refocuses. */
-  private suggestSuppressed = false;
+  private readonly suggestSuppressed = signal(false);
 
-  private statusSub?: Subscription;
-  private valueSub?: Subscription;
+  /** Tracks control value reactively for computed derivations. */
+  private readonly controlValue = signal<string | null>(null);
 
-  constructor(
-    private host: ElementRef<HTMLElement>,
-    private cdr: ChangeDetectorRef,
-    private sanitizer: DomSanitizer,
-  ) {}
-
-  get suggestListboxId(): string {
-    return `${this.suggestInstanceId}-listbox`;
-  }
-
-  get filteredSuggestItems(): FieldSuggestOption[] {
-    if (!this.suggestEnabled || !this.suggestOptions?.length) return [];
-    const raw = String(this.control.value ?? '').trim();
+  readonly filteredSuggestItems = computed(() => {
+    if (!this.suggestEnabled() || !this.suggestOptions()?.length) return [];
+    const raw = String(this.controlValue() ?? '').trim();
     if (raw.length === 0) return [];
     const q = raw.toLowerCase();
-    return this.suggestOptions.filter((o) => o.label.toLowerCase().includes(q));
-  }
+    return this.suggestOptions().filter((o) => o.label.toLowerCase().includes(q));
+  });
 
-  get showSuggestPanel(): boolean {
+  readonly showSuggestPanel = computed(() => {
     return (
-      this.suggestEnabled &&
-      !this.isDisabled &&
-      this.isFocused &&
-      !this.suggestSuppressed &&
-      this.filteredSuggestItems.length > 0
+      this.suggestEnabled() &&
+      !this.isDisabled() &&
+      this.isFocused() &&
+      !this.suggestSuppressed() &&
+      this.filteredSuggestItems().length > 0
     );
-  }
+  });
 
-  get activeSuggestOptionId(): string | null {
-    if (!this.showSuggestPanel || !this.filteredSuggestItems[this.highlightedSuggestIndex]) {
-      return null;
-    }
-    return `${this.suggestInstanceId}-opt-${this.highlightedSuggestIndex}`;
-  }
+  readonly isDisabled = computed(() => this.control().disabled);
 
-  safeLeadingIconSvg(): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(this.leadingIconSvg);
-  }
+  readonly hasError = computed(() => {
+    const ctrl = this.control();
+    return this.forceError() || (ctrl.invalid && (ctrl.dirty || ctrl.touched));
+  });
 
-  safeTrailingIconSvg(): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(this.trailingIconSvg);
-  }
+  readonly hasValue = computed(() => {
+    const v = this.controlValue();
+    return v !== null && v !== undefined && v !== '';
+  });
 
-  ngOnInit(): void {
-    this.statusSub = this.control.statusChanges.subscribe(() => {
-      this.cdr.markForCheck();
+  readonly isLabelFloated = computed(() => {
+    return this.isFocused() || this.showPlaceholder() || this.hasValue();
+  });
+
+  readonly activePlaceholder = computed(() => {
+    if (!this.showPlaceholder()) return '';
+    return this.placeholder();
+  });
+
+  readonly state = computed<FieldState>(() => {
+    if (this.isDisabled()) return 'disabled';
+    if (this.hasError()) return 'error';
+    if (this.isFocused()) return 'active';
+    if (this.isHovered()) return 'hover';
+    return 'default';
+  });
+
+  readonly hintColor = computed(() => {
+    if (this.isDisabled()) return 'disabled';
+    if (this.hasError()) return 'error';
+    return 'default';
+  });
+
+  constructor() {
+    effect(() => {
+      const ctrl = this.control();
+      this.controlValue.set(ctrl.value);
+
+      const statusSub = ctrl.statusChanges.subscribe(() => {
+        this.controlValue.set(ctrl.value);
+      });
+      const valueSub = ctrl.valueChanges.subscribe((val) => {
+        this.controlValue.set(val);
+        if (this.suggestEnabled()) {
+          this.suggestSuppressed.set(false);
+          this.suggestPanel()?.clampHighlight();
+        }
+      });
+
+      this.destroyRef.onDestroy(() => {
+        statusSub.unsubscribe();
+        valueSub.unsubscribe();
+      });
     });
-    this.valueSub = this.control.valueChanges.subscribe(() => {
-      if (this.suggestEnabled) {
-        this.suggestSuppressed = false;
-        this.clampSuggestHighlight();
-      }
-      this.cdr.markForCheck();
-    });
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['forceError'] || changes['control'] || changes['suggestEnabled'] || changes['suggestOptions']) {
-      this.clampSuggestHighlight();
-      this.cdr.markForCheck();
-    }
-  }
-
-  ngOnDestroy(): void {
-    this.statusSub?.unsubscribe();
-    this.valueSub?.unsubscribe();
-  }
-
-  @HostListener('mouseenter')
   onMouseEnter(): void {
-    if (!this.isDisabled) {
-      this.isHovered = true;
-      this.cdr.markForCheck();
+    if (!this.isDisabled()) {
+      this.isHovered.set(true);
     }
   }
 
-  @HostListener('mouseleave')
   onMouseLeave(): void {
-    this.isHovered = false;
-    this.cdr.markForCheck();
+    this.isHovered.set(false);
   }
 
   onFocus(): void {
-    if (!this.isDisabled) {
-      this.isFocused = true;
-      this.suggestSuppressed = false;
-      this.highlightedSuggestIndex = 0;
-      this.clampSuggestHighlight();
-      this.cdr.markForCheck();
+    if (!this.isDisabled()) {
+      this.isFocused.set(true);
+      this.suggestSuppressed.set(false);
+      this.suggestPanel()?.resetHighlight();
     }
   }
 
   onBlur(): void {
-    if (this.suggestEnabled) {
+    if (this.suggestEnabled()) {
       setTimeout(() => {
         if (!this.host.nativeElement.contains(document.activeElement)) {
-          this.isFocused = false;
-          this.suggestSuppressed = false;
-          this.cdr.markForCheck();
+          this.isFocused.set(false);
+          this.suggestSuppressed.set(false);
         }
       }, 0);
     } else {
-      this.isFocused = false;
-      this.cdr.markForCheck();
+      this.isFocused.set(false);
     }
   }
 
   onSuggestInput(): void {
-    if (this.suggestEnabled) {
-      this.suggestSuppressed = false;
-      this.clampSuggestHighlight();
-      this.cdr.markForCheck();
+    if (this.suggestEnabled()) {
+      this.suggestSuppressed.set(false);
+      this.suggestPanel()?.clampHighlight();
     }
   }
 
   onSuggestKeydown(ev: KeyboardEvent): void {
-    if (!this.suggestEnabled || this.isDisabled) return;
+    if (!this.suggestEnabled() || this.isDisabled()) return;
 
-    const open = this.showSuggestPanel;
-    const count = this.filteredSuggestItems.length;
+    const panel = this.suggestPanel();
+    if (!panel) return;
 
-    switch (ev.key) {
-      case 'ArrowDown':
-        if (count === 0) return;
-        ev.preventDefault();
-        if (!open) {
-          this.suggestSuppressed = false;
-          this.highlightedSuggestIndex = 0;
-        } else {
-          this.highlightedSuggestIndex = Math.min(count - 1, this.highlightedSuggestIndex + 1);
-        }
-        this.cdr.markForCheck();
-        break;
-      case 'ArrowUp':
-        if (count === 0) return;
-        ev.preventDefault();
-        if (!open) {
-          this.suggestSuppressed = false;
-          this.highlightedSuggestIndex = count - 1;
-        } else {
-          this.highlightedSuggestIndex = Math.max(0, this.highlightedSuggestIndex - 1);
-        }
-        this.cdr.markForCheck();
-        break;
-      case 'Enter':
-        if (open && this.filteredSuggestItems[this.highlightedSuggestIndex]) {
-          ev.preventDefault();
-          this.selectSuggestOption(
-            this.filteredSuggestItems[this.highlightedSuggestIndex],
-            this.highlightedSuggestIndex,
-          );
-        }
-        break;
-      case 'Escape':
-        if (open) {
-          ev.preventDefault();
-          this.suggestSuppressed = true;
-          this.cdr.markForCheck();
-        }
-        break;
-      case 'Home':
-        if (open && count > 0) {
-          ev.preventDefault();
-          this.highlightedSuggestIndex = 0;
-          this.cdr.markForCheck();
-        }
-        break;
-      case 'End':
-        if (open && count > 0) {
-          ev.preventDefault();
-          this.highlightedSuggestIndex = count - 1;
-          this.cdr.markForCheck();
-        }
-        break;
-      default:
-        break;
+    const open = this.showSuggestPanel();
+    if (!open && (ev.key === 'ArrowDown' || ev.key === 'ArrowUp')) {
+      this.suggestSuppressed.set(false);
     }
+    panel.handleKeydown(ev, open);
   }
 
-  onSuggestOptionPointerDown(ev: Event): void {
-    ev.preventDefault();
+  onSuggestOptionSelected(event: { option: SuggestOption; index: number }): void {
+    if (this.isDisabled()) return;
+    this.control().setValue(event.option.value ?? event.option.label);
+    this.control().markAsDirty();
+    this.suggestSuppressed.set(true);
+    this.inputRef()?.nativeElement.focus();
   }
 
-  onSuggestOptionMouseEnter(index: number): void {
-    this.highlightedSuggestIndex = index;
-    this.cdr.markForCheck();
-  }
-
-  selectSuggestOption(opt: FieldSuggestOption, index: number): void {
-    if (this.isDisabled) return;
-    this.control.setValue(opt.value ?? opt.label);
-    this.control.markAsDirty();
-    this.suggestSuppressed = true;
-    this.highlightedSuggestIndex = index;
-    this.inputRef?.nativeElement.focus();
-    this.cdr.markForCheck();
-  }
-
-  trackSuggestOption(index: number, opt: FieldSuggestOption): string {
-    return `${opt.label}\0${opt.value ?? ''}\0${index}`;
-  }
-
-  private clampSuggestHighlight(): void {
-    const n = this.filteredSuggestItems.length;
-    if (n === 0) {
-      this.highlightedSuggestIndex = 0;
-    } else if (this.highlightedSuggestIndex >= n) {
-      this.highlightedSuggestIndex = n - 1;
-    }
-  }
-
-  get isDisabled(): boolean {
-    return this.control.disabled;
-  }
-
-  get hasError(): boolean {
-    return this.forceError || (this.control.invalid && (this.control.dirty || this.control.touched));
-  }
-
-  get hasValue(): boolean {
-    const v = this.control.value;
-    return v !== null && v !== undefined && v !== '';
-  }
-
-  get isLabelFloated(): boolean {
-    return this.isFocused || this.showPlaceholder || this.hasValue;
-  }
-
-  get activePlaceholder(): string {
-    if (!this.showPlaceholder) return '';
-    return this.placeholder;
-  }
-
-  get state(): FieldState {
-    if (this.isDisabled) return 'disabled';
-    if (this.hasError) return 'error';
-    if (this.isFocused) return 'active';
-    if (this.isHovered) return 'hover';
-    return 'default';
-  }
-
-  get hintColor(): string {
-    if (this.isDisabled) return 'disabled';
-    if (this.hasError) return 'error';
-    return 'default';
+  onSuggestDismissed(): void {
+    this.suggestSuppressed.set(true);
   }
 }

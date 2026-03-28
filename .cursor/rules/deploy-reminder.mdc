@@ -1,0 +1,8 @@
+---
+description: gh-pages hosts the demo; main alone does not update the live site
+alwaysApply: true
+---
+
+# Deploy (reminder)
+
+Live playground is **`gh-pages`**, not **`main`** alone. After edits under `field-ui` or `playground`, run **`npm run deploy:gh-pages`** from **`field-demo/`** (or tell the user). **`base-href`:** `/field-ui-test/`. Full steps when those projects are in scope: see **`github-pages-deploy.mdc`**.

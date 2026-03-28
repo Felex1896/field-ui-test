@@ -1,6 +1,6 @@
 <div
   class="playground"
-  [class.theme-light]="theme === 'light'"
+  [class.theme-light]="themeSvc.theme() === 'light'"
   [class.controls-drawer-open]="controlsDrawerOpen"
 >
   @if (controlsDrawerOpen) {
@@ -53,7 +53,7 @@
         [trailingIconSvg]="trailingIconSvg"
         [forceError]="forceError"
         [suggestEnabled]="suggestEnabled"
-        [suggestOptions]="suggestOptions"
+        [suggestOptions]="suggestSvc.options"
       />
     </div>
 
@@ -79,10 +79,10 @@
     <div class="control-group">
       <div class="control-row">
         <label class="control-label">Light Theme</label>
-        <label class="toggle">
-          <input type="checkbox" [ngModel]="theme === 'light'" (ngModelChange)="theme = $event ? 'light' : 'dark'; onThemeChange()" />
-          <span class="toggle-track"></span>
-        </label>
+        <pg-toggle
+          [ngModel]="themeSvc.theme() === 'light'"
+          (ngModelChange)="onThemeToggle($event)"
+        />
       </div>
     </div>
 
@@ -124,10 +124,7 @@
     <div class="control-group">
       <div class="control-row">
         <label class="control-label">Label</label>
-        <label class="toggle">
-          <input type="checkbox" [(ngModel)]="showLabel" />
-          <span class="toggle-track"></span>
-        </label>
+        <pg-toggle [(ngModel)]="showLabel" />
       </div>
       @if (showLabel) {
         <input class="text-input" type="text" [(ngModel)]="labelText" placeholder="Label text" />
@@ -138,10 +135,7 @@
     <div class="control-group">
       <div class="control-row">
         <label class="control-label">Placeholder</label>
-        <label class="toggle">
-          <input type="checkbox" [(ngModel)]="showPlaceholder" />
-          <span class="toggle-track"></span>
-        </label>
+        <pg-toggle [(ngModel)]="showPlaceholder" />
       </div>
       @if (showPlaceholder) {
         <input class="text-input" type="text" [(ngModel)]="placeholderText" placeholder="Placeholder text" />
@@ -152,10 +146,7 @@
     <div class="control-group">
       <div class="control-row">
         <label class="control-label">Hint</label>
-        <label class="toggle">
-          <input type="checkbox" [(ngModel)]="showHint" />
-          <span class="toggle-track"></span>
-        </label>
+        <pg-toggle [(ngModel)]="showHint" />
       </div>
       @if (showHint) {
         <input class="text-input" type="text" [(ngModel)]="hintText" placeholder="Hint text" />
@@ -166,10 +157,7 @@
     <div class="control-group">
       <div class="control-row">
         <label class="control-label">Suffix</label>
-        <label class="toggle">
-          <input type="checkbox" [(ngModel)]="showSuffix" />
-          <span class="toggle-track"></span>
-        </label>
+        <pg-toggle [(ngModel)]="showSuffix" />
       </div>
       @if (showSuffix) {
         <input class="text-input" type="text" [(ngModel)]="suffixText" placeholder="Suffix text" />
@@ -182,32 +170,17 @@
     <div class="control-group">
       <div class="control-row">
         <label class="control-label">Leading Icon</label>
-        <label class="toggle">
-          <input type="checkbox" [(ngModel)]="showLeadingIcon" />
-          <span class="toggle-track"></span>
-        </label>
+        <pg-toggle [(ngModel)]="showLeadingIcon" />
       </div>
       @if (showLeadingIcon) {
-        @if (!leadingIconSvg) {
-          <div class="icon-picker">
-            @for (icon of leadingIcons; track icon) {
-              <button
-                class="icon-btn"
-                [class.active]="leadingIconName === icon"
-                (click)="leadingIconName = icon"
-              >{{ icon }}</button>
-            }
-          </div>
-          <label class="upload-btn">
-            <input type="file" accept=".svg,image/svg+xml" (change)="onSvgUpload('leading', $event)" />
-            Upload SVG
-          </label>
-        } @else {
-          <div class="icon-preview-row">
-            <span class="icon-preview-label">Custom SVG uploaded</span>
-            <button class="icon-clear-btn" (click)="clearIcon('leading')">Remove</button>
-          </div>
-        }
+        <pg-icon-picker
+          [icons]="leadingIcons"
+          [selectedIcon]="leadingIconName"
+          [customSvg]="leadingIconSvg"
+          (iconSelected)="onLeadingIconSelected($event)"
+          (svgUploaded)="onLeadingSvgUploaded($event)"
+          (svgCleared)="onLeadingSvgCleared()"
+        />
       }
     </div>
 
@@ -215,69 +188,33 @@
     <div class="control-group">
       <div class="control-row">
         <label class="control-label">Trailing Icon</label>
-        <label class="toggle">
-          <input type="checkbox" [(ngModel)]="showTrailingIcon" />
-          <span class="toggle-track"></span>
-        </label>
+        <pg-toggle [(ngModel)]="showTrailingIcon" />
       </div>
       @if (showTrailingIcon) {
-        @if (!trailingIconSvg) {
-          <div class="icon-picker">
-            @for (icon of trailingIcons; track icon) {
-              <button
-                class="icon-btn"
-                [class.active]="trailingIconName === icon"
-                (click)="trailingIconName = icon"
-              >{{ icon }}</button>
-            }
-          </div>
-          <label class="upload-btn">
-            <input type="file" accept=".svg,image/svg+xml" (change)="onSvgUpload('trailing', $event)" />
-            Upload SVG
-          </label>
-        } @else {
-          <div class="icon-preview-row">
-            <span class="icon-preview-label">Custom SVG uploaded</span>
-            <button class="icon-clear-btn" (click)="clearIcon('trailing')">Remove</button>
-          </div>
-        }
+        <pg-icon-picker
+          [icons]="trailingIcons"
+          [selectedIcon]="trailingIconName"
+          [customSvg]="trailingIconSvg"
+          (iconSelected)="onTrailingIconSelected($event)"
+          (svgUploaded)="onTrailingSvgUploaded($event)"
+          (svgCleared)="onTrailingSvgCleared()"
+        />
       }
     </div>
 
     <div class="divider"></div>
 
-    <!-- Suggest (autocomplete list under field) -->
+    <!-- Suggest -->
     <div class="control-group">
       <div class="control-row">
         <label class="control-label">Suggest</label>
-        <label class="toggle">
-          <input type="checkbox" [(ngModel)]="suggestEnabled" />
-          <span class="toggle-track"></span>
-        </label>
+        <pg-toggle [(ngModel)]="suggestEnabled" />
       </div>
       <p class="control-hint">Type at least one character to filter options by label. Options are saved in your browser.</p>
     </div>
 
     <!-- Suggest options editor -->
-    <div class="control-group suggest-options-group">
-      <label class="control-label">Suggest options</label>
-      <p class="control-hint">One option per line. Use <code>Label | value</code> to set a separate value, or just <code>Label</code> to use the label as the value. Max {{ maxSuggestLines }} lines.</p>
-      <textarea
-        class="suggest-options-textarea"
-        rows="6"
-        [(ngModel)]="suggestOptionsDraft"
-        spellcheck="false"
-        autocomplete="off"
-        placeholder="Apple&#10;Bell pepper&#10;Display name | internal-id"
-      ></textarea>
-      @if (suggestOptionsError) {
-        <p class="suggest-options-error">{{ suggestOptionsError }}</p>
-      }
-      <div class="suggest-options-actions">
-        <button class="suggest-apply-btn" type="button" (click)="applySuggestOptions()">Apply</button>
-        <button class="suggest-reset-btn" type="button" (click)="resetSuggestOptionsToDefaults()">Reset to defaults</button>
-      </div>
-    </div>
+    <pg-suggest-editor />
 
     <div class="divider"></div>
 
@@ -285,10 +222,7 @@
     <div class="control-group">
       <div class="control-row">
         <label class="control-label">Disabled</label>
-        <label class="toggle">
-          <input type="checkbox" [(ngModel)]="isDisabled" (ngModelChange)="onDisabledToggle()" />
-          <span class="toggle-track"></span>
-        </label>
+        <pg-toggle [(ngModel)]="isDisabled" (ngModelChange)="onDisabledToggle()" />
       </div>
     </div>
 
@@ -296,10 +230,7 @@
     <div class="control-group">
       <div class="control-row">
         <label class="control-label">Force Error</label>
-        <label class="toggle">
-          <input type="checkbox" [(ngModel)]="forceError" />
-          <span class="toggle-track"></span>
-        </label>
+        <pg-toggle [(ngModel)]="forceError" />
       </div>
     </div>
 

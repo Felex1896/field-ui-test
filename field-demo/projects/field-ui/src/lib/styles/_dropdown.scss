@@ -1,0 +1,30 @@
+// ─── Dropdown dimensions (theme-independent) ─────────────────────────────────
+
+:root {
+  --dropdown-border-radius: 8px;
+  --dropdown-padding-y: 8px;
+  --dropdown-option-height: 40px;
+  --dropdown-option-padding-x: 16px;
+  --dropdown-panel-gap: 4px;
+}
+
+// ─── Dropdown surfaces (theme) ────────────────────────────────────────────────
+
+:root,
+[data-theme='dark'] {
+  --dropdown-panel-surface: #1a1a1a;
+  --dropdown-panel-fill: rgba(253, 253, 253, 0.04);
+  --dropdown-panel-border: rgba(253, 253, 253, 0.08);
+  --dropdown-panel-shadow: 0 2px 6px rgba(0, 0, 0, 0.16);
+  --dropdown-option-hover-bg: rgba(253, 253, 253, 0.04);
+  --dropdown-option-text: rgba(253, 253, 253, 0.9);
+}
+
+[data-theme='light'] {
+  --dropdown-panel-surface: #fafafa;
+  --dropdown-panel-fill: rgba(0, 0, 0, 0.03);
+  --dropdown-panel-border: rgba(0, 0, 0, 0.08);
+  --dropdown-panel-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  --dropdown-option-hover-bg: rgba(0, 0, 0, 0.06);
+  --dropdown-option-text: rgba(0, 0, 0, 0.87);
+}

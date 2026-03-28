@@ -1,0 +1,47 @@
+:host {
+  display: inline-flex;
+}
+
+.toggle {
+  position: relative;
+  display: inline-flex;
+  cursor: pointer;
+
+  input[type='checkbox'] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .toggle-track {
+    display: block;
+    width: 36px;
+    height: 20px;
+    border-radius: 10px;
+    background: var(--pg-toggle-track);
+    transition: background 200ms ease;
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--pg-toggle-thumb);
+      transition: transform 200ms ease, background 200ms ease;
+    }
+  }
+
+  input:checked + .toggle-track {
+    background: var(--pg-accent);
+
+    &::after {
+      transform: translateX(16px);
+      background: #fff;
+    }
+  }
+}

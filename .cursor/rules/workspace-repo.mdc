@@ -1,0 +1,12 @@
+---
+description: Field repo root, field-demo layout, npm commands, GitHub URLs
+alwaysApply: true
+---
+
+# Workspace
+
+- **Root:** Use **`Field/`** as the Cursor project root (not only `field-demo/`). Commit the whole tree: `.cursor/`, `field-demo/`, future sibling packages.
+- **`field-demo/`:** Angular 21 — `projects/field-ui/` (library), `projects/playground/` (demo). From **`field-demo/`:** `npm start` → http://localhost:4200/
+- **Lint:** `npm run lint` (ESLint with `@angular-eslint` + `typescript-eslint`).
+- **GitHub:** [field-ui-test](https://github.com/Felex1896/field-ui-test) · live https://felex1896.github.io/field-ui-test/
+- **New packages:** Siblings of `field-demo/` under `Field/` unless you deliberately colocate.

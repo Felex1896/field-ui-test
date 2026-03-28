@@ -1,24 +1,16 @@
 ---
-description: Viewport-locked playground shell, independent column scroll, mobile controls drawer (900px)
-globs: field-demo/projects/playground/**/*
+description: Playground shell — dual scroll columns, 900px drawer + safe-area
+globs:
+  - field-demo/projects/playground/**/*
 alwaysApply: false
 ---
 
 # Playground responsive layout
 
-When editing **`field-demo/projects/playground/`** layout or global shell styles, keep this pattern unless the user requests a different design.
+When editing **`field-demo/projects/playground/`** shell or global layout, keep this unless the user asks otherwise.
 
-## Wide viewports
+**Wide:** `html` / `body` / `app-root` fill height; **`body { overflow: hidden }`**. Two columns: preview **flex-grows**; controls **fixed width**. Each column **`overflow-y: auto`**, **`min-height: 0`**, **`overscroll-behavior: contain`**.
 
-- **Viewport shell** — `html`, `body`, and `app-root` fill the height; **`body` uses `overflow: hidden`** so the document does not scroll as a single page.
-- **Two columns** — Preview (field demo) on the left with **flex growth**; **Controls** on the right at a **fixed width**. Each column scrolls on its own: **`overflow-y: auto`**, **`min-height: 0`** (flex children), and **`overscroll-behavior: contain`** so wheel/touch on one side does not move the other.
+**Narrow (`max-width: 900px`):** Controls **fixed** off-screen, slide in; **`pointer-events: none`** when closed. **Top-right** menu toggles drawer; **`env(safe-area-inset-*)`** on notched devices. Close: backdrop, second menu tap, **Escape**, resize **above** breakpoint. Keep **`viewport-fit=cover`** in playground **`index.html`** when tuning safe areas. **Keep breakpoint in sync** in SCSS (`$playground-drawer-max`) and TS (`PLAYGROUND_DRAWER_BREAKPOINT_PX`).
 
-## Narrow viewports (mobile / small tablet)
-
-- **Breakpoint** — **`max-width: 900px`** (adjust in SCSS and in any TypeScript that references the same value, e.g. `resize` handlers, so they stay in sync).
-- **Controls** — Not in normal document flow; **fixed** off-screen to the right, **slide in** when open. **`pointer-events: none`** when closed so hidden controls are not focusable.
-- **Menu control** — **Fixed top-right** button toggles the drawer; icon may switch to close when open. Use **`env(safe-area-inset-*)`** for notched devices.
-- **Dismiss** — **Backdrop** click, second tap on the menu control, **`Escape`**, and **window resize wider than the breakpoint** should close the drawer.
-- **Viewport meta** — Playground **`index.html`** should keep **`viewport-fit=cover`** when tuning safe-area behavior.
-
-If you change the breakpoint or shell behavior, update **stylesheet(s) and TS together** where both apply.
+**Theme:** Handled via `ThemeService` (signal-based, sets `data-theme` attribute). All playground colors use `--pg-*` CSS custom properties defined in `styles.scss`; no `.theme-light &` nesting in component SCSS.

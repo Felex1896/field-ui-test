@@ -1,0 +1,19 @@
+<ul
+  class="field-suggest-panel"
+  [id]="listboxId"
+  role="listbox"
+  tabindex="-1"
+>
+  @for (opt of items(); track trackOption($index, opt)) {
+    <li
+      role="option"
+      [id]="optionId($index)"
+      class="field-suggest-option"
+      [class.highlighted]="highlightedIndex() === $index"
+      [attr.aria-selected]="selectedValue() === (opt.value ?? opt.label)"
+      (mouseenter)="onOptionMouseEnter($index)"
+      (pointerdown)="onOptionPointerDown($event)"
+      (click)="onOptionClick(opt, $index)"
+    >{{ opt.label }}</li>
+  }
+</ul>

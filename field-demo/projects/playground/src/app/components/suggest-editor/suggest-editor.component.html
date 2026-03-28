@@ -1,0 +1,19 @@
+<div class="control-group suggest-options-group">
+  <label class="control-label">Suggest options</label>
+  <p class="control-hint">One option per line. Use <code>Label | value</code> to set a separate value, or just <code>Label</code> to use the label as the value. Max {{ svc.maxLines }} lines.</p>
+  <textarea
+    class="suggest-options-textarea"
+    rows="6"
+    [(ngModel)]="svc.draft"
+    spellcheck="false"
+    autocomplete="off"
+    placeholder="Apple&#10;Bell pepper&#10;Display name | internal-id"
+  ></textarea>
+  @if (svc.error) {
+    <p class="suggest-options-error">{{ svc.error }}</p>
+  }
+  <div class="suggest-options-actions">
+    <button class="suggest-apply-btn" type="button" (click)="svc.apply()">Apply</button>
+    <button class="suggest-reset-btn" type="button" (click)="svc.resetToDefaults()">Reset to defaults</button>
+  </div>
+</div>

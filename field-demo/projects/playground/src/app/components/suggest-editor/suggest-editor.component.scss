@@ -1,0 +1,104 @@
+.suggest-options-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 0;
+}
+
+.control-label {
+  font-size: 13px;
+  color: var(--pg-text-muted);
+  font-family: var(--field-font-family);
+  font-weight: 400;
+  letter-spacing: 0.1px;
+  transition: color 200ms ease;
+}
+
+.control-hint {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--pg-text-faint);
+  font-family: var(--field-font-family);
+
+  code {
+    font-size: 10px;
+    padding: 1px 4px;
+    border-radius: 3px;
+    background: var(--pg-border-subtle);
+  }
+}
+
+.suggest-options-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+  min-height: 100px;
+  background: var(--pg-input-bg);
+  border: 1px solid var(--pg-border-light);
+  border-radius: 6px;
+  padding: 7px 10px;
+  font-family: var(--field-font-family);
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--pg-input-text);
+  outline: none;
+  transition: border-color 150ms ease, background 150ms ease, color 150ms ease;
+
+  &::placeholder {
+    color: var(--pg-text-ghost);
+  }
+
+  &:focus {
+    border-color: var(--pg-accent-focus);
+  }
+}
+
+.suggest-options-error {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--pg-error);
+  font-family: var(--field-font-family);
+}
+
+.suggest-options-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.suggest-apply-btn,
+.suggest-reset-btn {
+  flex: 1;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-family: var(--field-font-family);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 150ms ease;
+  border: 1px solid transparent;
+}
+
+.suggest-apply-btn {
+  background: rgba(113, 155, 238, 0.18);
+  border-color: var(--pg-accent-border);
+  color: var(--pg-accent);
+
+  &:hover {
+    background: rgba(113, 155, 238, 0.28);
+    border-color: var(--pg-accent-focus);
+  }
+}
+
+.suggest-reset-btn {
+  background: var(--pg-btn-bg);
+  border-color: var(--pg-btn-border);
+  color: var(--pg-btn-text);
+
+  &:hover {
+    background: var(--pg-border-subtle);
+    border-color: var(--pg-border-strong);
+    color: var(--pg-text-muted);
+  }
+}
