@@ -15,12 +15,24 @@ Use these when implementing UI, comparing to the live demo, or calling Figma MCP
 
 ## Local
 
-- **Project / workspace:** `/Users/fedor.korzun/Documents/cursor-projects/Field`
+- **Workspace root (umbrella folder):** `/Users/fedor.korzun/Documents/cursor-projects/Field` — this folder may be renamed later; treat it as the home for all Field-related packages.
+
+## Repository layout
+
+- **`field-demo/`** — Angular playground app; consumes Field UI. **Git remote** for [field-ui-test](https://github.com/Felex1896/field-ui-test) lives here today (`ng serve` → `http://localhost:4200/`).
+- **Future packages** — Additional Field components or libraries should live as **siblings** of `field-demo/` under the same parent (same level in the folder tree), not nested inside `field-demo/`, unless you deliberately colocate them.
+- **Cursor rules** — `.cursor/rules/` exists at the workspace root and inside `field-demo/` (kept in sync for GitHub clones that only open `field-demo`).
 
 ## Remote
 
 - **Git repository:** https://github.com/Felex1896/field-ui-test
 - **Playground (deployed):** https://felex1896.github.io/field-ui-test/
+
+## GitHub Pages — keep the playground current
+
+- The live playground is built from the **`gh-pages` branch**. **`main` alone does not update that site** — a deploy step is required.
+- **Whenever playground-visible code changes** (e.g. `field-demo/src/**`, styles, or components the demo uses), run **`npm run deploy:gh-pages`** from **`field-demo/`** after your changes are ready (typically after pushing to `main`). That rebuilds with `base-href` `/field-ui-test/` and publishes to `gh-pages`.
+- **Agent behavior:** If you change the demo or anything that affects the public playground, run that deploy (or tell the user to) so the URL matches the latest work — do not assume `git push` to `main` updated the site.
 
 ## Local dev (field-ui-test repo)
 
@@ -29,4 +41,4 @@ Use these when implementing UI, comparing to the live demo, or calling Figma MCP
 ## Notes
 
 - Prefer existing components and tokens in this repo over guessing from Figma alone.
-- Compare UI against the deployed playground when checking parity.
+- Compare UI against the deployed playground when checking parity; if you just shipped demo changes, deploy first (see **GitHub Pages** above).
