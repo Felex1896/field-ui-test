@@ -1,96 +1,126 @@
-<div class="field-wrapper" [class]="'state-' + state">
-  <div
-    class="body"
-    [class.has-label]="showLabel"
-    [class.label-floated]="isLabelFloated"
-    (click)="fieldInput.focus()"
-  >
+<div class="field-wrapper" [class]="'state-' + state" [class.suggest-open]="showSuggestPanel">
+  <div class="field-anchor">
+    <div
+      class="body"
+      [class.has-label]="showLabel"
+      [class.label-floated]="isLabelFloated"
+      (click)="fieldInput.focus()"
+    >
 
-    <!-- Leading icon -->
-    @if (showLeadingIcon) {
-      <div class="leading-icon">
-        @if (leadingIconSvg) {
-          <span class="icon-inline" [innerHTML]="safeLeadingIconSvg()" aria-hidden="true"></span>
-        } @else {
-          <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            @switch (leadingIconName) {
-              @case ('menu') {
-                <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <!-- Leading icon -->
+      @if (showLeadingIcon) {
+        <div class="leading-icon">
+          @if (leadingIconSvg) {
+            <span class="icon-inline" [innerHTML]="safeLeadingIconSvg()" aria-hidden="true"></span>
+          } @else {
+            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              @switch (leadingIconName) {
+                @case ('menu') {
+                  <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                }
+                @case ('search') {
+                  <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+                  <path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                }
+                @case ('person') {
+                  <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/>
+                  <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                }
+                @case ('lock') {
+                  <rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="2"/>
+                  <path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                }
+                @default {
+                  <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                }
               }
-              @case ('search') {
-                <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
-                <path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              }
-              @case ('person') {
-                <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/>
-                <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              }
-              @case ('lock') {
-                <rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="2"/>
-                <path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              }
-              @default {
-                <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              }
-            }
-          </svg>
-        }
-      </div>
-    }
-
-    <!-- Text area: single stable DOM structure, CSS handles layout -->
-    <div class="text-area">
-      @if (showLabel) {
-        <label class="field-label">{{ label }}</label>
+            </svg>
+          }
+        </div>
       }
-      <input
-        #fieldInput
-        class="field-input"
-        [formControl]="control"
-        [placeholder]="activePlaceholder"
-        (focus)="onFocus()"
-        (blur)="onBlur()"
-      />
+
+      <!-- Text area: single stable DOM structure, CSS handles layout -->
+      <div class="text-area">
+        @if (showLabel) {
+          <label class="field-label">{{ label }}</label>
+        }
+        <input
+          #fieldInput
+          class="field-input"
+          [formControl]="control"
+          [placeholder]="activePlaceholder"
+          [attr.aria-expanded]="suggestEnabled ? showSuggestPanel : null"
+          [attr.aria-controls]="suggestEnabled ? suggestListboxId : null"
+          [attr.aria-autocomplete]="suggestEnabled ? 'list' : null"
+          [attr.aria-activedescendant]="suggestEnabled ? activeSuggestOptionId : null"
+          (focus)="onFocus()"
+          (blur)="onBlur()"
+          (input)="onSuggestInput()"
+          (keydown)="onSuggestKeydown($event)"
+        />
+      </div>
+
+      <!-- Suffix -->
+      @if (showSuffix && suffix) {
+        <span class="field-suffix" [class.suffix-with-label]="showLabel && isLabelFloated">{{ suffix }}</span>
+      }
+
+      <!-- Trailing icon -->
+      @if (showTrailingIcon) {
+        <div class="trailing-icon">
+          @if (trailingIconSvg) {
+            <span class="icon-inline" [innerHTML]="safeTrailingIconSvg()" aria-hidden="true"></span>
+          } @else {
+            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              @switch (trailingIconName) {
+                @case ('info') {
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                  <path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                }
+                @case ('close') {
+                  <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                }
+                @case ('check') {
+                  <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                }
+                @case ('eye') {
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" stroke-width="2"/>
+                  <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+                }
+                @default {
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                  <path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                }
+              }
+            </svg>
+          }
+        </div>
+      }
+
+      <div class="bottom-line"></div>
     </div>
 
-    <!-- Suffix -->
-    @if (showSuffix && suffix) {
-      <span class="field-suffix" [class.suffix-with-label]="showLabel && isLabelFloated">{{ suffix }}</span>
-    }
-
-    <!-- Trailing icon -->
-    @if (showTrailingIcon) {
-      <div class="trailing-icon">
-        @if (trailingIconSvg) {
-          <span class="icon-inline" [innerHTML]="safeTrailingIconSvg()" aria-hidden="true"></span>
-        } @else {
-          <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            @switch (trailingIconName) {
-              @case ('info') {
-                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-                <path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              }
-              @case ('close') {
-                <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              }
-              @case ('check') {
-                <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              }
-              @case ('eye') {
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" stroke-width="2"/>
-                <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
-              }
-              @default {
-                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-                <path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              }
-            }
-          </svg>
+    @if (showSuggestPanel) {
+      <ul
+        class="field-suggest-panel"
+        [id]="suggestListboxId"
+        role="listbox"
+        tabindex="-1"
+      >
+        @for (opt of filteredSuggestItems; track trackSuggestOption($index, opt)) {
+          <li
+            role="option"
+            [id]="suggestInstanceId + '-opt-' + $index"
+            class="field-suggest-option"
+            [class.highlighted]="highlightedSuggestIndex === $index"
+            [attr.aria-selected]="control.value === (opt.value ?? opt.label)"
+            (mouseenter)="onSuggestOptionMouseEnter($index)"
+            (pointerdown)="onSuggestOptionPointerDown($event)"
+            (click)="selectSuggestOption(opt, $index)"
+          >{{ opt.label }}</li>
         }
-      </div>
+      </ul>
     }
-
-    <div class="bottom-line"></div>
   </div>
 
   @if (showHint) {

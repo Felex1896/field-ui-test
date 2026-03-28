@@ -13,6 +13,12 @@
   width: 100%;
 }
 
+// Anchor: positions suggest panel below the field body (body keeps overflow:hidden)
+.field-anchor {
+  position: relative;
+  width: 100%;
+}
+
 // ─── Body ─────────────────────────────────────────────────────────────────────
 
 .body {
@@ -257,4 +263,50 @@
   .field-suffix  { color: var(--field-suffix-disabled); }
   .leading-icon,
   .trailing-icon { color: var(--field-icon-disabled); }
+}
+
+// ─── Suggest list (Figma dropdown panel 24:2716, field-attached) ───────────────
+
+.field-suggest-panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + var(--dropdown-panel-gap));
+  z-index: 20;
+  margin: 0;
+  padding: var(--dropdown-padding-y) 0;
+  list-style: none;
+  box-sizing: border-box;
+  border-radius: var(--dropdown-border-radius);
+  border: 1px solid var(--dropdown-panel-border);
+  box-shadow: var(--dropdown-panel-shadow);
+  background-image:
+    linear-gradient(var(--dropdown-panel-fill), var(--dropdown-panel-fill)),
+    linear-gradient(var(--dropdown-panel-surface), var(--dropdown-panel-surface));
+  max-height: min(40vh, 320px);
+  overflow-y: auto;
+}
+
+.field-suggest-option {
+  height: var(--dropdown-option-height);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--dropdown-option-padding-x);
+  box-sizing: border-box;
+  font-family: var(--field-font-family);
+  font-size: var(--field-font-size-body);
+  font-weight: 400;
+  line-height: var(--field-line-height-body);
+  letter-spacing: var(--field-letter-spacing-body);
+  color: var(--dropdown-option-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 120ms ease;
+
+  &.highlighted {
+    background-color: var(--dropdown-option-hover-bg);
+  }
 }

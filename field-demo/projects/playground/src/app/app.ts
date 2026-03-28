@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { FieldStandardComponent } from 'field-ui';
+import { FieldStandardComponent, FieldSuggestOption } from 'field-ui';
 
 type IconSlot = 'leading' | 'trailing';
 
@@ -15,6 +15,16 @@ type IconSlot = 'leading' | 'trailing';
 })
 export class App implements OnInit {
   fieldControl = new FormControl('');
+
+  suggestEnabled = false;
+  readonly suggestOptions: FieldSuggestOption[] = [
+    { label: 'Item 1', value: 'Item 1' },
+    { label: 'Item 2', value: 'Item 2' },
+    { label: 'Item 3', value: 'Item 3' },
+    { label: 'Item 4', value: 'Item 4' },
+    { label: 'Item 5', value: 'Item 5' },
+    { label: 'Item 6', value: 'Item 6' },
+  ];
 
   fieldWidth = 400;
   fieldWidthText: string | number = '400';

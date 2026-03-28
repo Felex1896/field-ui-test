@@ -2,7 +2,7 @@
 
   <!-- ── Left: Field preview ─────────────────────────────────────────────── -->
   <div class="preview-panel">
-    <p class="preview-label">Preview</p>
+    <p class="preview-label">Standard field</p>
 
     <div class="preview-field" [style.width.px]="fieldWidth">
       <app-field-standard
@@ -22,6 +22,8 @@
         [trailingIconName]="trailingIconName"
         [trailingIconSvg]="trailingIconSvg"
         [forceError]="forceError"
+        [suggestEnabled]="suggestEnabled"
+        [suggestOptions]="suggestOptions"
       />
     </div>
 
@@ -210,6 +212,20 @@
           </div>
         }
       }
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Suggest (autocomplete list under field) -->
+    <div class="control-group">
+      <div class="control-row">
+        <label class="control-label">Suggest</label>
+        <label class="toggle">
+          <input type="checkbox" [(ngModel)]="suggestEnabled" />
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+      <p class="control-hint">Focus the field and type to filter options (e.g. <code>item</code>, <code>item 1</code>). Uses Item 1–6.</p>
     </div>
 
     <div class="divider"></div>
