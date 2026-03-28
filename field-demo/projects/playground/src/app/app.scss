@@ -135,6 +135,21 @@
   justify-content: space-between;
 }
 
+.playground-foot {
+  margin: 20px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid rgba(253, 253, 253, 0.08);
+  font-size: 10px;
+  line-height: 1.5;
+  color: rgba(253, 253, 253, 0.35);
+  font-family: var(--field-font-family);
+
+  .theme-light & {
+    border-top-color: rgba(0, 0, 0, 0.08);
+    color: rgba(0, 0, 0, 0.4);
+  }
+}
+
 .control-hint {
   margin: 0;
   font-size: 11px;
