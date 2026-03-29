@@ -14,7 +14,11 @@ import {
   afterNextRender,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import type { FormControl } from '@angular/forms';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { merge, of } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
 
 import { FieldChipComponent } from '../../chips/field-chip/field-chip.component';
 import { FieldIconComponent } from '../../core/icon/field-icon.component';
@@ -50,7 +54,7 @@ export class FieldStandardComponent {
   private readonly host = inject(ElementRef<HTMLElement>);
   private readonly injector = inject(Injector);
 
-  readonly control = input<FormControl>(new FormControl(''));
+  readonly control = input.required<FormControl>();
   readonly label = input('Label');
   readonly showLabel = input(true);
   readonly placeholder = input('Placeholder');
@@ -67,6 +71,13 @@ export class FieldStandardComponent {
   readonly trailingIconName = input('info');
   readonly trailingIconSvg = input('');
   readonly forceError = input(false);
+
+  /**
+   * When true, the field is treated as disabled for visuals and interaction, OR'd with
+   * `FormControl.disabled`. Use when a parent keeps a toggle in sync with the control so UI cannot
+   * lag behind `statusChanges` (e.g. zoneless + Rx timing).
+   */
+  readonly syncDisabled = input(false);
 
   /** When true, shows a Figma-style option list under the field while focused after the user has typed at least one character; options match by label substring (case-insensitive). */
   readonly suggestEnabled = input(false);
@@ -93,6 +104,12 @@ export class FieldStandardComponent {
   /** Tracks control value reactively for computed derivations. */
   private readonly controlValue = signal<string | null>(null);
 
+  /**
+   * Mirrors `FormControl.disabled`, updated from the same Rx pipeline as `controlValue` so the two
+   * never desync (two separate `toObservable(control)` chains can interleave badly in zoneless).
+   */
+  private readonly controlDisabled = signal(false);
+
   readonly effectiveSuggestEnabled = computed(
     () => this.suggestEnabled() || this.multiValueEnabled(),
   );
@@ -115,7 +132,7 @@ export class FieldStandardComponent {
     );
   });
 
-  readonly isDisabled = computed(() => this.control().disabled);
+  readonly isDisabled = computed(() => this.controlDisabled() || this.syncDisabled());
 
   readonly hasError = computed(() => {
     const ctrl = this.control();
@@ -154,32 +171,49 @@ export class FieldStandardComponent {
   });
 
   constructor() {
-    effect((onCleanup) => {
-      const ctrl = this.control();
-      this.controlValue.set(ctrl.value);
+    type CtrlEv = { kind: 'init' } | { kind: 'status' } | { kind: 'value'; val: unknown };
 
-      const statusSub = ctrl.statusChanges.subscribe(() => {
-        this.controlValue.set(ctrl.value);
-      });
-      const valueSub = ctrl.valueChanges.subscribe((val) => {
-        this.controlValue.set(val);
-        if (String(val ?? '').length > 0) {
-          this.chipDeleteStageIndex.set(null);
-        }
-        if (this.effectiveSuggestEnabled()) {
-          this.suggestSuppressed.set(false);
-          this.suggestPanel()?.clampHighlight();
-        }
-      });
-
-      onCleanup(() => {
-        statusSub.unsubscribe();
-        valueSub.unsubscribe();
-      });
-    });
+    // Single subscription per `control` ref: always re-read `ctrl.disabled` with `ctrl.value` so
+    // disabled styling cannot flip false while the control is still disabled.
+    toObservable(this.control, { injector: this.injector })
+      .pipe(
+        switchMap((ctrl) =>
+          merge(
+            of<CtrlEv>({ kind: 'init' }),
+            ctrl.statusChanges.pipe(map(() => ({ kind: 'status' }) as const)),
+            ctrl.valueChanges.pipe(map((val) => ({ kind: 'value', val }) as const)),
+          ).pipe(
+            tap((ev) => {
+              if (ev.kind === 'value') {
+                this.controlValue.set(ev.val as string | null);
+                if (String(ev.val ?? '').length > 0) {
+                  this.chipDeleteStageIndex.set(null);
+                }
+                if (this.effectiveSuggestEnabled()) {
+                  this.suggestSuppressed.set(false);
+                  this.suggestPanel()?.clampHighlight();
+                }
+              } else {
+                this.controlValue.set(ctrl.value as string | null);
+              }
+              this.controlDisabled.set(ctrl.disabled);
+            }),
+          ),
+        ),
+        takeUntilDestroyed(),
+      )
+      .subscribe();
 
     effect(() => {
       if (!this.multiValueEnabled()) {
+        this.chipDeleteStageIndex.set(null);
+      }
+    });
+
+    effect(() => {
+      if (this.isDisabled()) {
+        this.isHovered.set(false);
+        this.isFocused.set(false);
         this.chipDeleteStageIndex.set(null);
       }
     });
@@ -230,6 +264,7 @@ export class FieldStandardComponent {
   }
 
   onSuggestInput(): void {
+    if (this.isDisabled()) return;
     if (this.effectiveSuggestEnabled()) {
       this.suggestSuppressed.set(false);
       this.suggestPanel()?.clampHighlight();
@@ -299,6 +334,7 @@ export class FieldStandardComponent {
   }
 
   onChipDeletionStagingCancel(): void {
+    if (this.isDisabled()) return;
     this.chipDeleteStageIndex.set(null);
     queueMicrotask(() => this.inputRef()?.nativeElement.focus());
   }

@@ -75,8 +75,9 @@ export class FieldPlaygroundStore {
     (event.target as HTMLInputElement).blur();
   }
 
-  onDisabledToggle(): void {
-    if (this.isDisabled) {
+  /** Pass the new toggle value — do not read `isDisabled` here (ngModel may not have updated yet). */
+  onDisabledToggle(disabled: boolean): void {
+    if (disabled) {
       this.fieldControl.disable();
     } else {
       this.fieldControl.enable();
@@ -93,7 +94,17 @@ export class FieldPlaygroundStore {
       }
     } else {
       this.chipValues = [];
+      const wasDisabled = this.fieldControl.disabled;
+      if (wasDisabled) {
+        this.fieldControl.enable({ emitEvent: false });
+      }
       this.fieldControl.setValue('');
+      if (wasDisabled) {
+        this.fieldControl.disable({ emitEvent: true });
+      }
+    }
+    if (this.isDisabled) {
+      this.fieldControl.disable({ emitEvent: true });
     }
   }
 

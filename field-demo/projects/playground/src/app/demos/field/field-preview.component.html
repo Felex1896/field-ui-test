@@ -1,6 +1,7 @@
 <div class="preview-field" [style.width.px]="store.fieldWidth">
   <app-field-standard
     [control]="store.fieldControl"
+    [syncDisabled]="store.isDisabled"
     [label]="store.labelText"
     [showLabel]="store.showLabel"
     [placeholder]="store.placeholderText"

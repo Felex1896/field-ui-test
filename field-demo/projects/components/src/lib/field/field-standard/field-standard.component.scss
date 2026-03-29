@@ -19,6 +19,12 @@
   width: 100%;
 }
 
+// When disabled, block pointer hit-testing on older browsers without full `inert` support.
+.field-wrapper.state-disabled .field-anchor {
+  pointer-events: none;
+  user-select: none;
+}
+
 // ─── Body ─────────────────────────────────────────────────────────────────────
 
 .body {
@@ -297,8 +303,9 @@
 }
 
 // ─── State: Hover ─────────────────────────────────────────────────────────────
+// Exclude disabled so a stale .state-hover class or :hover cannot brighten the body.
 
-.state-hover .body {
+.field-wrapper.state-hover:not(.state-disabled) .body {
   background-color: var(--field-bg-hover);
 }
 
@@ -332,15 +339,23 @@
   .body {
     background-color: var(--field-bg-disabled);
     cursor: not-allowed;
+
+    &:hover {
+      background-color: var(--field-bg-disabled);
+    }
   }
   .field-label {
     color: var(--field-label-disabled);
   }
   .field-input {
     color: var(--field-text-disabled);
+    -webkit-text-fill-color: var(--field-text-disabled);
+    opacity: 1;
     cursor: not-allowed;
     &::placeholder {
       color: var(--field-label-disabled);
+      -webkit-text-fill-color: var(--field-label-disabled);
+      opacity: 1;
     }
   }
   .field-suffix {

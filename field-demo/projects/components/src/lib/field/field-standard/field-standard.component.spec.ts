@@ -37,6 +37,16 @@ class ForceErrorHostComponent {
 @Component({
   standalone: true,
   imports: [FieldStandardComponent, ReactiveFormsModule],
+  template: `<app-field-standard [control]="ctrl" [syncDisabled]="parentSyncDisabled" />`,
+})
+class SyncDisabledHostComponent {
+  ctrl = new FormControl('');
+  parentSyncDisabled = false;
+}
+
+@Component({
+  standalone: true,
+  imports: [FieldStandardComponent, ReactiveFormsModule],
   template: `
     <app-field-standard
       [control]="control()"
@@ -60,7 +70,12 @@ describe('FieldStandardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HostComponent, ForceErrorHostComponent, MultiSuggestHostComponent],
+      imports: [
+        HostComponent,
+        ForceErrorHostComponent,
+        MultiSuggestHostComponent,
+        SyncDisabledHostComponent,
+      ],
     }).compileComponents();
     fixture = TestBed.createComponent(HostComponent);
     host = fixture.componentInstance;
@@ -102,6 +117,44 @@ describe('FieldStandardComponent', () => {
 
     it('state is default when neither focused nor hovered', () => {
       expect(field.state()).toBe('default');
+    });
+
+    it('tracks disabled when the same FormControl is disabled via API', () => {
+      expect(field.state()).toBe('default');
+      host.control().disable();
+      fixture.detectChanges();
+      expect(host.control().disabled).toBe(true);
+      expect(field.isDisabled()).toBe(true);
+      expect(field.state()).toBe('disabled');
+      const wrapper = fixture.nativeElement.querySelector('.field-wrapper') as HTMLElement | null;
+      expect(wrapper).toBeTruthy();
+      expect(wrapper!.classList.contains('field-wrapper')).toBe(true);
+      expect(wrapper!.classList.contains('state-disabled')).toBe(true);
+      const anchor = fixture.nativeElement.querySelector('.field-anchor');
+      expect(anchor?.hasAttribute('inert')).toBe(true);
+    });
+
+    it('stays disabled after programmatic setValue while control remains disabled', () => {
+      host.control().disable();
+      fixture.detectChanges();
+      expect(field.state()).toBe('disabled');
+      host.control().setValue('x');
+      fixture.detectChanges();
+      expect(host.control().disabled).toBe(true);
+      expect(field.isDisabled()).toBe(true);
+      expect(field.state()).toBe('disabled');
+    });
+
+    it('syncDisabled forces disabled state and blocks hover state', () => {
+      const f = TestBed.createComponent(SyncDisabledHostComponent);
+      const h = f.componentInstance;
+      h.parentSyncDisabled = true;
+      f.detectChanges();
+      const fld = f.debugElement.children[0].componentInstance as FieldStandardComponent;
+      expect(fld.isDisabled()).toBe(true);
+      expect(fld.state()).toBe('disabled');
+      fld.isHovered.set(true);
+      expect(fld.state()).toBe('disabled');
     });
   });
 
@@ -191,7 +244,8 @@ describe('FieldStandardComponent', () => {
       multiFixture = TestBed.createComponent(MultiSuggestHostComponent);
       multiHost = multiFixture.componentInstance;
       multiFixture.detectChanges();
-      multiField = multiFixture.debugElement.children[0].componentInstance as FieldStandardComponent;
+      multiField = multiFixture.debugElement.children[0]
+        .componentInstance as FieldStandardComponent;
     });
 
     it('enables effective suggest when multiValueEnabled is true even if suggestEnabled is false', () => {
@@ -209,6 +263,14 @@ describe('FieldStandardComponent', () => {
       multiField.chipValues.set(['x']);
       multiFixture.detectChanges();
       expect(multiField.hasValue()).toBe(true);
+    });
+
+    it('sets inert on field-anchor when disabled with chips', () => {
+      multiField.chipValues.set(['chip']);
+      multiHost.control().disable();
+      multiFixture.detectChanges();
+      const anchor = multiFixture.nativeElement.querySelector('.field-anchor');
+      expect(anchor?.hasAttribute('inert')).toBe(true);
     });
 
     it('appends a chip and clears draft when picking from suggest', () => {

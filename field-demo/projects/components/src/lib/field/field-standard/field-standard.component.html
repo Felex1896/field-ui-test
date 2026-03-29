@@ -1,5 +1,13 @@
-<div class="field-wrapper" [class]="'state-' + state()" [class.suggest-open]="showSuggestPanel()">
-  <div class="field-anchor">
+<div
+  class="field-wrapper"
+  [class.state-default]="state() === 'default'"
+  [class.state-hover]="state() === 'hover'"
+  [class.state-active]="state() === 'active'"
+  [class.state-error]="state() === 'error'"
+  [class.state-disabled]="state() === 'disabled'"
+  [class.suggest-open]="showSuggestPanel()"
+>
+  <div class="field-anchor" [attr.inert]="isDisabled() ? true : null">
     <div
       class="body"
       [class.has-label]="showLabel()"

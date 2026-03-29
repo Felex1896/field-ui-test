@@ -288,4 +288,12 @@ $playground-drawer-max: 900px;
   line-height: 1.5;
   color: var(--pg-text-fainter);
   font-family: var(--field-font-family);
+
+  code {
+    font-size: 10px;
+    padding: 1px 4px;
+    border-radius: 4px;
+    background: var(--pg-border-subtle);
+    font-family: ui-monospace, monospace;
+  }
 }
